@@ -5,8 +5,8 @@ class UserModel {
     DBService.dbPool.query(
       "SELECT user_id, name, email from users where user_id = ?",
       [user_id],
-      function (err, results, fields) {
-        cb(err, results[0]);
+      (error, results) => {
+        cb(error, results);
       }
     );
   }
@@ -15,8 +15,8 @@ class UserModel {
     DBService.dbPool.query(
       "SELECT user_id, name, password from users where email = ?",
       [email],
-      function (err, results, fields) {
-        cb(err, results);
+      (error, results) => {
+        cb(error, results);
       }
     );
   }
