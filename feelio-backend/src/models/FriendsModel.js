@@ -41,24 +41,29 @@ class FriendsModel {
     );
   }
 
-  checkFriends({ user_id, friend_id, cb }) {
-    DBService.dbPool.query(
-      "SELECT count(*) FROM friend_requests WHERE ((user_a_id = ? AND user_b_id = ?) OR (user_b_id = ? AND user_a_id = ?))",
-      [user_id, friend_id, user_id, friend_id],
-      (error, results) => {
-        cb(error, results);
-      }
-    );
-  }
+  async create({ user_id, friend_id, cb}) {
+    var countFriend = 0;
 
-  create({ user_id, friend_id, cb }) {
-    DBService.dbPool.query(
-      "INSERT INTO friend_requests (user_a_id, user_b_id) VALUES (?, ?)",
-      [user_id, friend_id],
-      (error, results) => {
-        cb(error, results.insertId);
-      }
-    );
+    const promisePool = DBService.dbPool.promise();
+
+    const [rows,fields] = await promisePool.query("SELECT count(*) as count FROM friend_requests WHERE ((user_a_id = ? AND user_b_id = ?) OR (user_b_id = ? AND user_a_id = ?))",
+      [user_id, friend_id, user_id, friend_id]);
+
+      countFriend = rows[0].count;
+
+    if(countFriend == 0){
+      DBService.dbPool.query(
+        "INSERT INTO friend_requests (user_a_id, user_b_id) VALUES (?, ?)",
+        [user_id, friend_id],
+        (error, results) => {
+          console.log(error);
+          cb(error, results.insertId);
+        }
+      );
+    }
+    else{
+      cb(1, 0);
+    }
   }
 }
 
