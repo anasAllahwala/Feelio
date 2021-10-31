@@ -30,6 +30,27 @@ class PostModel {
       }
     );
   }
+
+  edit({ body, image, post_id, cb }) {
+    DBService.dbPool.query(
+      "UPDATE posts SET body = ?, image = ? WHERE post_id = ?",
+      [body, image, post_id],
+      (error, results) => {
+        cb(error, results.insertId);
+      }
+    );
+  }
+
+
+  delete({ post_id, cb }) {
+    DBService.dbPool.query(
+      "DELETE FROM posts WHERE post_id = ?",
+      [post_id],
+      (error, results) => {
+        cb(error, results.insertId);
+      }
+    );
+  }
 }
 
 module.exports.PostModel = new PostModel();
