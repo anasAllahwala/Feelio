@@ -3,8 +3,8 @@ const { DBService } = require("../services/DBService");
 class FriendsModel {
   findPendingByUser({ user_id, cb }) {
     DBService.dbPool.query(
-      "SELECT IF(user_a_id = ?, user_b_id, user_a_id) as friend_id, users.name as friend_name, friend_request_date FROM friend_requests INNER JOIN users ON IF(user_a_id = ?, user_b_id, user_a_id) = users.user_id WHERE status = 'Pending' AND (user_a_id = ? OR user_b_id = ?) ORDER BY friend_request_date DESC",
-      [user_id, user_id, user_id, user_id],
+      "SELECT friend_request_id, sender_id, users.name as sender_name, friend_request_date FROM friend_requests INNER JOIN users ON friend_requests.sender_id = users.user_id WHERE status = 'Pending' AND receiver_id = ? ORDER BY friend_request_date DESC",
+      [user_id],
       (error, results) => {
         cb(error, results);
       }
@@ -13,7 +13,7 @@ class FriendsModel {
 
   findAcceptedByUser({ user_id, cb }) {
     DBService.dbPool.query(
-      "SELECT IF(user_a_id = ?, user_b_id, user_a_id) as friend_id, users.name as friend_name, friend_request_date FROM friend_requests INNER JOIN users ON IF(user_a_id = ?, user_b_id, user_a_id) = users.user_id WHERE status = 'Accepted' AND (user_a_id = ? OR user_b_id = ?) ORDER BY friend_request_date DESC",
+      "SELECT IF(sender_id = ?, receiver_id, sender_id) as friend_id, users.name as friend_name, friend_request_date FROM friend_requests INNER JOIN users ON IF(sender_id = ?, receiver_id, sender_id) = users.user_id WHERE status = 'Accepted' AND (sender_id = ? OR receiver_id = ?) ORDER BY friend_request_date DESC",
       [user_id, user_id, user_id, user_id],
       (error, results) => {
         cb(error, results);
@@ -21,47 +21,48 @@ class FriendsModel {
     );
   }
 
-  acceptRequest({ friend_request_id, cb }) {
+  acceptRequest({ user_id, friend_request_id, cb }) {
     DBService.dbPool.query(
-      "UPDATE friend_requests SET status = 'Accepted' WHERE friend_request_id = ?",
-      [friend_request_id],
+      "UPDATE friend_requests SET status = 'Accepted' WHERE friend_request_id = ? AND receiver_id = ?",
+      [friend_request_id, user_id],
       (error, results) => {
         cb(error, results);
       }
     );
   }
 
-  declineRequest({ friend_request_id, cb }) {
+  declineRequest({ user_id, friend_request_id, cb }) {
     DBService.dbPool.query(
-      "UPDATE friend_requests SET status = 'Declined' WHERE friend_request_id = ?",
-      [friend_request_id],
+      "UPDATE friend_requests SET status = 'Declined' WHERE friend_request_id = ? AND receiver_id = ?",
+      [friend_request_id, user_id],
       (error, results) => {
         cb(error, results);
       }
     );
   }
 
-  async create({ user_id, friend_id, cb}) {
+  async create({ user_id, friend_id, cb }) {
     var countFriend = 0;
 
     const promisePool = DBService.dbPool.promise();
 
-    const [rows,fields] = await promisePool.query("SELECT count(*) as count FROM friend_requests WHERE ((user_a_id = ? AND user_b_id = ?) OR (user_b_id = ? AND user_a_id = ?))",
-      [user_id, friend_id, user_id, friend_id]);
+    const [rows, fields] = await promisePool.query(
+      "SELECT count(*) as count FROM friend_requests WHERE ((sender_id = ? AND receiver_id = ?) OR (receiver_id = ? AND sender_id = ?))",
+      [user_id, friend_id, user_id, friend_id]
+    );
 
-      countFriend = rows[0].count;
+    countFriend = rows[0].count;
 
-    if(countFriend == 0){
+    if (countFriend == 0) {
       DBService.dbPool.query(
-        "INSERT INTO friend_requests (user_a_id, user_b_id) VALUES (?, ?)",
+        "INSERT INTO friend_requests (sender_id, receiver_id) VALUES (?, ?)",
         [user_id, friend_id],
         (error, results) => {
           console.log(error);
           cb(error, results.insertId);
         }
       );
-    }
-    else{
+    } else {
       cb(1, 0);
     }
   }

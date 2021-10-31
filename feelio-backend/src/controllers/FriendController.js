@@ -6,6 +6,7 @@ class FriendController {
     const { user_id } = req;
     function callback(errors, results) {
       if (errors) {
+        console.error(error);
       } else {
         res.json(
           successResponse(
@@ -24,6 +25,7 @@ class FriendController {
 
     function callback(errors, results) {
       if (errors) {
+        console.error(error);
       } else {
         res.json(successResponse(null, "Friend requests sent successfully!"));
       }
@@ -33,10 +35,12 @@ class FriendController {
   }
 
   accept(req, res, next) {
+    const { user_id } = req;
     const { friend_request_id } = req.body;
 
     function callback(errors, results) {
       if (errors) {
+        console.error(error);
       } else {
         res.json(
           successResponse(null, "Friend request accepted successfully!")
@@ -44,14 +48,16 @@ class FriendController {
       }
     }
 
-    FriendsModel.acceptRequest({ friend_request_id, cb: callback });
+    FriendsModel.acceptRequest({ user_id, friend_request_id, cb: callback });
   }
 
   decline(req, res, next) {
+    const { user_id } = req;
     const { friend_request_id } = req.body;
 
     function callback(errors, results) {
       if (errors) {
+        console.error(error);
       } else {
         res.json(
           successResponse(null, "Friend request declined successfully!")
@@ -59,19 +65,17 @@ class FriendController {
       }
     }
 
-    FriendsModel.declineRequest({ friend_request_id, cb: callback });
+    FriendsModel.declineRequest({ user_id, friend_request_id, cb: callback });
   }
 
   getFriends(req, res, next) {
     const { user_id } = req;
     function callback(errors, results) {
       if (errors) {
+        console.error(error);
       } else {
         res.json(
-          successResponse(
-            { ...results },
-            "Friends fetched successfully!"
-          )
+          successResponse({ ...results }, "Friends fetched successfully!")
         );
       }
     }
