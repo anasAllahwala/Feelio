@@ -25,8 +25,8 @@ class PostModel {
 
   findByFriends({ user_id, cb }) {
     DBService.dbPool.query(
-      "SELECT body, image, user_id, posted_at from posts where user_id IN (SELECT IF(sender_id = ?, receiver_id, sender_id) as user_id FROM friend_requests WHERE status = 'Accepted' AND (sender_id = ? OR receiver_id = ?)) ORDER BY post_id DESC",
-      [user_id, user_id, user_id],
+      "SELECT body, image, user_id, posted_at from posts where user_id = ? OR user_id IN (SELECT IF(sender_id = ?, receiver_id, sender_id) as user_id FROM friend_requests WHERE status = 'Accepted' AND (sender_id = ? OR receiver_id = ?)) ORDER BY post_id DESC",
+      [user_id, user_id, user_id, user_id],
       (error, results) => {
         cb(error, results);
       }
