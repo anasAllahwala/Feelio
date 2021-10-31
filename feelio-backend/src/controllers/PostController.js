@@ -4,6 +4,7 @@ const { successResponse } = require("../utils/responses");
 class PostController{
 
     getPost(req, res, next){
+        const { user_id } = req;
         const { post_id } = req.body;
 
         function callback(error, results){
@@ -24,7 +25,7 @@ class PostController{
             }
         }
 
-        PostModel.findById({ post_id, cb: callback });
+        PostModel.findById({ user_id, post_id, cb: callback });
     }
 
     getPostByFriends(req, res, next){

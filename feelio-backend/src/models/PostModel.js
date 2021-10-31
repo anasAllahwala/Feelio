@@ -1,10 +1,10 @@
 const { DBService } = require("../services/DBService");
 
 class PostModel {
-  findById({ post_id, cb }) {
+  findById({ user_id, post_id, cb }) {
     DBService.dbPool.query(
-      "SELECT body, image, user_id, posted_at from posts where post_id = ?",
-      [post_id],
+      "SELECT body, image, user_id, posted_at from posts WHERE post_id = ? AND (user_id = ? OR user_id IN (SELECT IF(sender_id = ?, receiver_id, sender_id) as user_id FROM friend_requests WHERE status = 'Accepted' AND (sender_id = ? OR receiver_id = ?)))",
+      [post_id, user_id, user_id, user_id, user_id],
       (error, results) => {
         cb(error, results);
       }
