@@ -1,5 +1,5 @@
 const mysql = require("mysql2");
-const { DBException } = require("../exceptions/DatabaseException");
+const { DBException } = require("../utils/exceptions/DatabaseException");
 class DBService {
   init({ host, user, pass, name }) {
     if (!this.dbPool) {

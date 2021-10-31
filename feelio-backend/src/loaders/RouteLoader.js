@@ -1,4 +1,4 @@
-var authRouter = require("./routes/AuthRoute");
+var authRouter = require("../routes/authRoute");
 
 class RouteLoader {
     static init(app){

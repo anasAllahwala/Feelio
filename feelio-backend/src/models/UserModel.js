@@ -1,3 +1,4 @@
+const {hash} = require("../helpers/hash");
 const { DBService } = require("../services/DBService");
 
 class UserModel {
@@ -22,6 +23,7 @@ class UserModel {
   }
 
   create({ name, email, password, cb }) {
+    password = hash.create(password);
     DBService.dbPool.query(
       "INSERT INTO users (name, email, password) VALUES (?, ?, ?)",
       [name, email, password],

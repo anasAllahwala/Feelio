@@ -1,35 +1,41 @@
 const jwt = require("jsonwebtoken");
+const {
+  TokenExpiredException,
+  TokenVerificationException,
+  TokenMissingException,
+} = require("../utils/exceptions/AuthException");
 
 const verifyToken = (req, res, next) => {
-  const bearerHeader = req.headers["authorization"];
+  try {
+    const bearerHeader = req.headers["authorization"];
+    const tokenStart = "bearer ";
 
-  if (bearerHeader) {
+    if (!bearerHeader || !bearerHeader.startsWith(tokenStart)) {
+      throw new TokenMissingException();
+    }
+
     const bearer = bearerHeader.split(" ");
     const bearerToken = bearer[1];
-    var decoded;
 
-    try {
-      decoded = jwt.verify(bearerToken, process.env.JWT_SECRET_KEY);
-    } catch (e) {
-      return res.status(401).json({
-        header: {
-          error: 1,
-          message: "Unauthorized Request!",
-        },
-      });
-    }
-    var user_id = decoded.user_id;
+    let decoded;
+
+    jwt.verify(bearerToken, process.env.JWT_SECRET_KEY, (err, result) => {
+      if (err) {
+        if (err.name == "TokenExpiredError") throw new TokenExpiredException();
+        else if (err.name === "JsonWebTokenError")
+          throw new TokenVerificationException();
+      } else decoded = result;
+    });
+
+    let user_id = decoded.user_id;
     req.user_id = user_id;
 
     next();
-  } else {
-    res.sendStatus(403).json({
-      header: {
-        error: 1,
-        message: "Forbidden Request!",
-      },
-    });
+
+  } catch (e) {
+    next(e);
   }
+  
 };
 
 module.exports = verifyToken;

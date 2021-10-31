@@ -1,5 +1,6 @@
 const { DBService } = require("../services/DBService");
 class DBLoader {
+
   static init() {
     DBService.init({
       host: process.env.DB_HOST,
@@ -8,12 +9,7 @@ class DBLoader {
       name: process.env.DB_NAME,
     });
 
-    try {
-      console.log(`DATABASE ${process.env.DB_HOST}`);
-      DBService.checkConnection();
-    } catch (e) {
-      console.log(e.message);
-    }
+    DBService.checkConnection();
   }
 }
 

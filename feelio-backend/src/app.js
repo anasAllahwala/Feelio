@@ -1,20 +1,16 @@
 const { setup } = require("./loaders");
 const express = require("express");
 
-function startServer() {
-  const app = express();
-  
-  setup({ expressApp: app });
+const app = express();
 
-  app.listen(process.env.PORT, (err) => {
-    if (err) {
-      console.error(err);
-      return;
-    }
-    console.log(
-      `Your server is ready and running at http://localhost:${process.env.PORT}!`
-    );
-  });
-}
+setup({ expressApp: app });
 
-startServer();
+app.listen(process.env.PORT, (err) => {
+  if (err) {
+    console.error(err);
+    return;
+  }
+  console.log(
+    `Your server is ready and running at http://localhost:${process.env.PORT}!`
+  );
+});

@@ -1,4 +1,5 @@
 var jwt = require("jsonwebtoken");
+const { hash } = require("../helpers/hash");
 const { UserModel } = require("../models/UserModel");
 
 class AuthController {
@@ -16,14 +17,14 @@ class AuthController {
     }
 
     function callback(error, results) {
-      if (!error && pass === results[0]?.password) {
+      if (!error && hash.verify(pass, results[0]?.password)) {
         // Response if authentication is successful
         // Removing password property from results
         const { password, ...response } = results[0];
 
         // Create token
         const token = jwt.sign(
-          { user_id: response.user_id },  
+          { user_id: response.user_id },
           process.env.JWT_SECRET_KEY,
           {
             expiresIn: "2h",

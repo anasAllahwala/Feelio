@@ -7,14 +7,13 @@ const setup = ({ expressApp }) => {
   ExpressLoader.init(expressApp);
   console.log("Express Initialized");
 
-  MiddlewareLoader.init();
+  MiddlewareLoader.init(expressApp);
   console.log("Middlewares Initialized");
 
-  RouteLoader.init();
-  console.log("Middlewares Initialized");
-
-  DBLoader.init();
-  console.log("MYSQL Initialized");
+  RouteLoader.init(expressApp);
+  console.log("Routes Initialized");
 };
+
+DBLoader.init();
 
 module.exports = { setup };
