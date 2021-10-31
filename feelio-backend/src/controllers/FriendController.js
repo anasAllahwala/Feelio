@@ -48,7 +48,7 @@ class FriendController {
   }
 
   decline(req, res, next) {
-    const { friend_request_id } = req;
+    const { friend_request_id } = req.body;
 
     function callback(errors, results) {
       if (errors) {
@@ -70,7 +70,7 @@ class FriendController {
         res.json(
           successResponse(
             { ...results },
-            "Friend request declined successfully!"
+            "Friends fetched successfully!"
           )
         );
       }
