@@ -1,0 +1,39 @@
+const { DBService } = require("../services/DBService");
+
+class UserModel {
+  findById({ user_id, cb }) {
+    DBService.dbPool.query(
+      "SELECT user_id, name, email from users where user_id = ?",
+      [user_id],
+      function (err, results, fields) {
+        cb(err, results[0]);
+      }
+    );
+  }
+
+  findByEmail({ email, cb }) {
+    DBService.dbPool.query(
+      "SELECT user_id, name, password from users where email = ?",
+      [email],
+      function (err, results, fields) {
+        cb(err, results);
+      }
+    );
+  }
+
+  create({ name, email, password, cb }) {
+    DBService.dbPool.query(
+      "INSERT INTO users (name, email, password) VALUES (?, ?, ?)",
+      [name, email, password],
+      (error, results) => {
+        cb(error, results.insertId);
+      }
+    );
+  }
+
+  login({ email, cb }) {
+    this.findByEmail({ email, cb });
+  }
+}
+
+module.exports.UserModel = new UserModel();

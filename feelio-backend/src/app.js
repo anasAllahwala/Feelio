@@ -3,12 +3,12 @@ const express = require("express");
 
 function startServer() {
   const app = express();
-
+  
   setup({ expressApp: app });
 
   app.listen(process.env.PORT, (err) => {
     if (err) {
-      console.log(err);
+      console.error(err);
       return;
     }
     console.log(

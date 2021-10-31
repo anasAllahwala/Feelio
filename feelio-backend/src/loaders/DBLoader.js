@@ -1,4 +1,4 @@
-const { DBService } = require("../services/db-service");
+const { DBService } = require("../services/DBService");
 class DBLoader {
   static init() {
     DBService.init({
