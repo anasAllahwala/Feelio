@@ -4,7 +4,7 @@ const { successResponse } = require("../utils/responses");
 class PostController{
 
     getPost(req, res, next){
-        const { post_id } = req.body.postId;
+        const { post_id } = req.body;
 
         function callback(error, results){
             if (error) {
@@ -53,8 +53,7 @@ class PostController{
 
     create(req, res, next){
         const { user_id } = req;
-        const { body } = req.body.body;
-        const { image } = req.body.image;
+        const { body, image } = req.body;
 
         function callback(error, results){
             if (error) {
@@ -79,9 +78,7 @@ class PostController{
 
     edit(req, res, next){
         const { user_id } = req;
-        const { body } = req.body.body;
-        const { image } = req.body.image;
-        const { post_id } = req.body.postId;
+        const { body, image, post_id } = req.body;
 
         function callback(error, results){
             if (error) {
@@ -106,7 +103,7 @@ class PostController{
 
     delete(req, res, next){
         const { user_id } = req;
-        const { post_id } = req.body.postId;
+        const { post_id } = req.body;
 
         function callback(error, results){
             if (error) {
