@@ -2,18 +2,22 @@ var jwt = require("jsonwebtoken");
 const { hash } = require("../helpers/hash");
 const { UserModel } = require("../models/UserModel");
 
+const {
+  InvalidCredentialsException,
+  RegistrationFailedException,
+} = require("../utils/exceptions/AuthException");
+
+const { successResponse } = require("../utils/responses");
+
 class AuthController {
   login(req, res, next) {
-    const { email, password: pass } = req.body;
 
+    const { email, password: pass } = req.body;
     if (!email || !pass) {
-      res.json({
-        header: {
-          error: "1",
-          message: "Login Failed!",
-        },
-      });
-      next();
+      const err = new InvalidCredentialsException(
+        "Email and password is required!"
+      );
+      next(err);
     }
 
     function callback(error, results) {
@@ -31,24 +35,21 @@ class AuthController {
           }
         );
 
-        res.json({
-          header: {
-            error: "0",
-            message: "Logged in successfully!",
-          },
-          body: {
-            ...response,
-            token,
-          },
-        });
+        res.json(
+          successResponse(
+            {
+              ...response,
+              token,
+            },
+            "Logged in successfully!"
+          )
+        );
       } else {
         // Response if authentication fails
-        res.json({
-          header: {
-            error: "1",
-            message: "Login Failed!",
-          },
-        });
+        const err = new InvalidCredentialsException(
+          "Email or password is incorrect!"
+        );
+        next(err);
       }
     }
 
@@ -59,13 +60,10 @@ class AuthController {
     const { name, email, password } = req.body;
 
     if (!name || !email || !password) {
-      res.json({
-        header: {
-          error: "1",
-          message: "Registration Failed!",
-        },
-      });
-      next();
+      const err = new RegistrationFailedException(
+        "Name, Email and Password is required!"
+      );
+      next(err);
     }
 
     function callback(error, user_id) {
@@ -75,24 +73,19 @@ class AuthController {
           expiresIn: "2h",
         });
 
-        res.json({
-          header: {
-            error: "0",
-            message: "Registered successfully!",
-          },
-          body: {
-            name,
-            email,
-            token,
-          },
-        });
+        res.json(
+          successResponse(
+            {
+              name,
+              email,
+              token,
+            },
+            "Registered successfully!"
+          )
+        );
       } else {
-        res.json({
-          header: {
-            error: "1",
-            message: "Registration Failed!",
-          },
-        });
+        const err = new RegistrationFailedException("Registration Failed!");
+        next(err);
       }
     }
 
@@ -104,15 +97,14 @@ class AuthController {
 
     function callback(err, results) {
       if (!err) {
-        res.json({
-          header: {
-            error: "0",
-            message: "Profile data sent successfully!",
-          },
-          body: {
-            ...results,
-          },
-        });
+        res.json(
+          successResponse(
+            {
+              ...results,
+            },
+            "Profile data sent successfully!"
+          )
+        );
       } else {
         res.json({
           header: {

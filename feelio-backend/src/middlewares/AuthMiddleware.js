@@ -7,10 +7,13 @@ const {
 
 const verifyToken = (req, res, next) => {
   try {
-    const bearerHeader = req.headers["authorization"];
-    const tokenStart = "bearer ";
-
-    if (!bearerHeader || !bearerHeader.startsWith(tokenStart)) {
+    const bearerHeader = req.headers.authorization;
+    const tokenStart = "Bearer ";
+    if (
+      !bearerHeader ||
+      (!bearerHeader.startsWith(tokenStart) &&
+        !bearerHeader.startsWith(tokenStart.toLowerCase()))
+    ) {
       throw new TokenMissingException();
     }
 
@@ -31,11 +34,9 @@ const verifyToken = (req, res, next) => {
     req.user_id = user_id;
 
     next();
-
   } catch (e) {
     next(e);
   }
-  
 };
 
 module.exports = verifyToken;

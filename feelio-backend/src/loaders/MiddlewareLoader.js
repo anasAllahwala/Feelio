@@ -1,4 +1,5 @@
 const ErrorMiddleware = require("../middlewares/errorMiddleware");
+const { InvalidEndpointException } = require("../utils/exceptions/ApiException");
 
 class MiddlewareLoader {
   static init(app) {

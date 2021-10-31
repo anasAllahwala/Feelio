@@ -1,15 +1,15 @@
 var express = require("express");
 const auth = require("../middlewares/AuthMiddleware");
 const { FriendController } = require("../controllers/FriendController");
-var router = express.Router();
+var friendsRouter = express.Router();
 
 /* Get Friends */
-router.get("/friends", auth, FriendController.login);
+friendsRouter.get("/", auth, FriendController.get);
 
 /* Add Friend */
-router.post("/friends", auth, FriendController.register);
+friendsRouter.post("/", auth, FriendController.create);
 
 /* Remove Friend */
-router.delete("/friends", auth, FriendController.profile);
+friendsRouter.delete("/", auth, FriendController.delete);
 
-module.exports = router;
+module.exports = friendsRouter;

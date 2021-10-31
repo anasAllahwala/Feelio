@@ -1,5 +1,6 @@
 const { setup } = require("./loaders");
 const express = require("express");
+const { UserModel } = require("./models/UserModel");
 
 const app = express();
 

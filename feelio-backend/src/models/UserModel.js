@@ -1,4 +1,4 @@
-const {hash} = require("../helpers/hash");
+const { hash } = require("../helpers/hash");
 const { DBService } = require("../services/DBService");
 
 class UserModel {
