@@ -6,8 +6,6 @@ const app = express();
 
 setup({ expressApp: app });
 
-FriendsModel.create({user_id: 1, friend_id: 2});
-
 app.listen(process.env.PORT, (err) => {
   if (err) {
     console.error(err);
