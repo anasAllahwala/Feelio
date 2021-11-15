@@ -7,11 +7,10 @@ const {
   RegistrationFailedException,
 } = require("../utils/exceptions/AuthException");
 
-const { successResponse } = require("../utils/responses");
+const { successResponse, failureResponse } = require("../utils/responses");
 
 class AuthController {
   login(req, res, next) {
-
     const { email, password: pass } = req.body;
     if (!email || !pass) {
       const err = new InvalidCredentialsException(
@@ -68,6 +67,15 @@ class AuthController {
 
     function callback(error, user_id) {
       if (!error) {
+        if (!user_id) {
+          res.json({
+            headers: { error: 1, message: "Email is already registered!" },
+            body: {},
+          });
+
+          return;
+        }
+
         // Create token
         const token = jwt.sign({ user_id }, process.env.JWT_SECRET_KEY, {
           expiresIn: "2h",

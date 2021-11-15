@@ -1,36 +1,27 @@
+import { useEffect, useState } from "react";
 import { Post } from "../components";
-
-const Posts = [
-  {
-    id: 1,
-    owner: "Hello",
-    image: "image.jpg",
-    post: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Inventore veniam pariatur vero magnam officia dolor fugiat porro cumque. Tempora, suscipit.",
-  },
-  {
-    id: 2,
-    owner: "Hello",
-    image: "image.jpg",
-    post: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Inventore veniam pariatur vero magnam officia dolor fugiat porro cumque. Tempora, suscipit.",
-  },
-  {
-    id: 3,
-    owner: "Hello",
-    image: "image.jpg",
-    post: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Inventore veniam pariatur vero magnam officia dolor fugiat porro cumque. Tempora, suscipit.",
-  },
-];
+import { PostsApi } from "../api";
+import { useApi } from "../hooks";
+import { Outlet } from "react-router";
 
 const Home = () => {
+  const [posts, setPosts] = useState([]);
+  const { result } = useApi(PostsApi.fetch, null, null);
+
+  useEffect(() => {
+    if (result) setPosts(Object.values(result));
+  }, [result]);
+
   return (
     <div>
-      {Posts.length ? (
-        Posts.map((post) => (
-          <Post owner={post.owner} post={post.post} image={post.image} />
+      {posts.length ? (
+        posts.map((post) => (
+          <Post owner={post.user_id} post={post.body} image={post.image} />
         ))
       ) : (
         <p>No Posts found!</p>
       )}
+      <Outlet />
     </div>
   );
 };

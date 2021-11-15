@@ -1,3 +1,4 @@
-import Posts from "./Post";
+import PostsApi from "./PostsApi";
+import Auth from "./Auth";
 
-export { Posts };
+export { PostsApi, Auth };

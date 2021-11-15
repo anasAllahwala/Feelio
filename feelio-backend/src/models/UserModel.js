@@ -28,7 +28,7 @@ class UserModel {
       "INSERT INTO users (name, email, password) VALUES (?, ?, ?)",
       [name, email, password],
       (error, results) => {
-        cb(error, results.insertId);
+        cb(error, results?.insertId);
       }
     );
   }
