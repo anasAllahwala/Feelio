@@ -1,7 +1,5 @@
-import axios from "axios";
-
-const authInterceptor = () => {
-  axios.interceptors.request.use(
+const authInterceptor = (instance) => {
+  instance.interceptors.request.use(
     function (config) {
       if (config.url !== "/auth/login" && config.url !== "/auth/register") {
         config.headers = {

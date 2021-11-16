@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Post } from "../components";
 import { PostsApi } from "../api";
 import { useApi } from "../hooks";
-import { Outlet } from "react-router";
+import { CreatePost } from ".";
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
@@ -14,14 +14,24 @@ const Home = () => {
 
   return (
     <div>
-      {posts.length ? (
-        posts.map((post) => (
-          <Post owner={post.user_id} post={post.body} image={post.image} />
-        ))
-      ) : (
-        <p>No Posts found!</p>
-      )}
-      <Outlet />
+      <div className="flex justify-between">
+        <h1 className="font-semibold text-xl">Home Page</h1>
+      </div>
+      <div className="mt-2">
+        <CreatePost />
+      </div>
+      <div className="mt-2">
+        {posts.length ? (
+          posts.map((post, key) => (
+            <div>
+              <Post key={key} post={post} />
+              <hr className="m-5" />
+            </div>
+          ))
+        ) : (
+          <p>No Posts found!</p>
+        )}
+      </div>
     </div>
   );
 };

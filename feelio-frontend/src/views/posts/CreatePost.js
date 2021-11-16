@@ -19,13 +19,17 @@ const CreatePost = () => {
   return (
     <div>
       <form onSubmit={handleSubmit}>
-        <Input
-          type="text"
-          name="post"
-          value={post}
-          onChange={(e) => setPost(e.target.value)}
-        />
-        <Button>Create Post</Button>
+        <div className="flex">
+          <Input
+            parentClass="flex-1"
+            className="w-full h-full"
+            type="text"
+            name="post"
+            value={post}
+            onChange={(e) => setPost(e.target.value)}
+          />
+          <Button classes="bg-blue-500 text-white">Create Post</Button>
+        </div>
       </form>
     </div>
   );

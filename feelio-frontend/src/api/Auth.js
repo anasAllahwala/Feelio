@@ -1,18 +1,16 @@
-import axios from "axios";
+import { axiosInstance } from "../axios";
 import { API } from "../constants";
 
 const Login = (params) => {
-  return axios.post(API.LOGIN, params);
+  return axiosInstance.post(API.LOGIN, params);
 };
 
 const Register = (params) => {
-  return axios.post(API.REGISTER, params);
+  return axiosInstance.post(API.REGISTER, params);
 };
 
 const Profile = () => {
-  return axios.get(API.PROFILE, null, {
-    Authorization: `Bearer ${localStorage.getItem("token")}`,
-  });
+  return axiosInstance.get(API.PROFILE, null);
 };
 
 const Auth = { Login, Register, Profile };

@@ -1,29 +1,20 @@
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
 import { CreatePost, Home, Login, Register } from "./views";
-import RequireAuth from "./components/shared/RequireAuth";
-import { useEffect } from "react";
-import { authInterceptor } from "./interceptors";
-import axios from "axios";
+import { RequireAuth } from "./components";
 
 function App() {
-  useEffect(() => {
-    // authInterceptor();
-  }, []);
-
   return (
-    <div className="">
+    <div className="max-w-md lg:max-w-6xl m-auto py-5">
       <Routes>
         <Route
-          path="/posts/*"
+          path="/"
           element={
             <RequireAuth>
               <Home />
             </RequireAuth>
           }
-        >
-          <Route path="create" element={<CreatePost />} />
-        </Route>
+        ></Route>
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
       </Routes>

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button, Input } from "../../components";
 import { useAuth } from "../../hooks";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -39,6 +39,9 @@ const Login = () => {
           required
         />
         <Button>Login</Button>
+        <p>
+          Not an user? <Link to="/register">Register Now</Link>
+        </p>
       </form>
     </div>
   );

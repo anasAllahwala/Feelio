@@ -2,16 +2,16 @@
 const BASE_URL = "http://127.0.0.1:5000/";
 
 // Auth Endpoints
-const LOGIN = BASE_URL + "auth/login";
-const REGISTER = BASE_URL + "auth/register";
-const PROFILE = BASE_URL + "auth/profile";
+const LOGIN = "auth/login";
+const REGISTER = "auth/register";
+const PROFILE = "auth/profile";
 
 // Post Endpoints
-const POSTS = BASE_URL + "posts";
+const POSTS = "posts";
 
 // Friends Endpoints
-const FRIENDS = BASE_URL + "friends";
+const FRIENDS = "friends";
 
-const API = { LOGIN, REGISTER, PROFILE, POSTS, FRIENDS };
+const API = { LOGIN, REGISTER, PROFILE, POSTS, FRIENDS, BASE_URL };
 
 export default API;

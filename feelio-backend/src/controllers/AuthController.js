@@ -20,29 +20,37 @@ class AuthController {
     }
 
     function callback(error, results) {
-      if (!error && hash.verify(pass, results[0]?.password)) {
-        // Response if authentication is successful
-        // Removing password property from results
-        const { password, ...response } = results[0];
+      if (!error && typeof results[0] !== "undefined") {
+        if (hash.verify(pass, results[0]?.password)) {
+          // Response if authentication is successful
+          // Removing password property from results
+          const { password, ...response } = results[0];
 
-        // Create token
-        const token = jwt.sign(
-          { user_id: response.user_id },
-          process.env.JWT_SECRET_KEY,
-          {
-            expiresIn: "2h",
-          }
-        );
-
-        res.json(
-          successResponse(
+          // Create token
+          const token = jwt.sign(
+            { user_id: response.user_id },
+            process.env.JWT_SECRET_KEY,
             {
-              ...response,
-              token,
-            },
-            "Logged in successfully!"
-          )
-        );
+              expiresIn: "2h",
+            }
+          );
+
+          res.json(
+            successResponse(
+              {
+                ...response,
+                token,
+              },
+              "Logged in successfully!"
+            )
+          );
+        } else {
+          // Response if authentication fails
+          const err = new InvalidCredentialsException(
+            "Email or password is incorrect!"
+          );
+          next(err);
+        }
       } else {
         // Response if authentication fails
         const err = new InvalidCredentialsException(
