@@ -6,7 +6,7 @@ import { CreatePost } from ".";
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
-  const { result } = useApi(PostsApi.fetch, null, null);
+  const { refresh, result } = useApi(PostsApi.fetch, null, null);
 
   useEffect(() => {
     if (result) setPosts(Object.values(result));
@@ -18,13 +18,13 @@ const Home = () => {
         <h1 className="font-semibold text-xl">Home Page</h1>
       </div>
       <div className="mt-2">
-        <CreatePost />
+        <CreatePost refresh={refresh}/>
       </div>
       <div className="mt-2">
         {posts.length ? (
           posts.map((post, key) => (
-            <div>
-              <Post key={key} post={post} />
+            <div key={key}>
+              <Post post={post} refresh={refresh} />
               <hr className="m-5" />
             </div>
           ))

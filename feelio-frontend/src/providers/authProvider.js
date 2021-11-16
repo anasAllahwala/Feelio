@@ -4,14 +4,15 @@ import { Auth } from "../api";
 import { AuthContext } from "../contexts";
 
 const AuthProvider = ({ children }) => {
-  const [token, setToken] = useState("");
+  const [user, setUser] = useState(null);
 
   const signin = (params, callback) => {
     Auth.Login(params)
       .then(({ data }) => {
         if (data.headers.error.toString() === "0") {
-          setToken(data.body.token);
-          localStorage.setItem("token", data.body.token);
+          const {token, ...authUser} = data.body;
+          setUser(authUser);
+          localStorage.setItem("token", token);
           callback();
         }
       })
@@ -22,8 +23,9 @@ const AuthProvider = ({ children }) => {
     Auth.Register(params)
       .then(({ data }) => {
         if (data.headers.error.toString() === "0") {
-          setToken(data.body.token);
-          localStorage.setItem("token", data.body.token);
+          const {token, ...authUser} = data.body;
+          setUser(authUser);
+          localStorage.setItem("token", token);
           callback();
         }
       })
@@ -31,11 +33,11 @@ const AuthProvider = ({ children }) => {
   };
 
   const signout = () => {
-    setToken("");
+    setUser(null);
     localStorage.removeItem("token");
   };
 
-  let value = { token, signin, signout, register };
+  let value = { user, signin, signout, register };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

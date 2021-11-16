@@ -5,20 +5,22 @@ const useApi = (axiosFunction, params, initial) => {
   const [error, setError] = useState(null);
   const [result, setResult] = useState(initial);
 
-  useEffect(() => {
+  function refresh() {
     axiosFunction(params)
       .then(({ data }) => {
         if (data.headers.error.toString() === "0") {
-          
-        
           setResult(data.body);
         }
       })
       .catch((e) => setError(e))
       .finally(() => setLoading(false));
+  }
+
+  useEffect(() => {
+    refresh();
   }, [axiosFunction, params]);
 
-  return { loading, error, result };
+  return { refresh, loading, error, result };
 };
 
 export default useApi;

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { PostsApi } from "../../api";
 import { Button, Input } from "../../components";
 
-const CreatePost = () => {
+const CreatePost = ({refresh}) => {
   const [post, setPost] = useState("");
 
   function handleSubmit(ev) {
@@ -12,6 +12,7 @@ const CreatePost = () => {
       if (data.headers.error.toString() === "0") {
         alert("Post Created!");
         setPost("");
+        refresh();
       }
     });
   }
