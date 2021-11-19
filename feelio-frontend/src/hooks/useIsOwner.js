@@ -1,15 +1,14 @@
 import { useEffect, useState } from "react";
-import {useAuth} from "./";
+import { useAuth } from "./";
 
 const useIsOwner = (user_id) => {
-  const [isOwner, setIsOwner] = useState(true);
+  const [isOwner, setIsOwner] = useState(false);
 
   let { user } = useAuth();
 
   useEffect(() => {
-    if(user)
-    setIsOwner(user.user_id === user_id);
-
+    console.log(user);
+    if (user) setIsOwner(user.user_id === user_id);
   }, [user, user_id]);
 
   return isOwner;

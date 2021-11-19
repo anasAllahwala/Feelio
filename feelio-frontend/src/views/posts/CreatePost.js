@@ -1,8 +1,8 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { PostsApi } from "../../api";
 import { Button, Input } from "../../components";
 
-const CreatePost = ({refresh}) => {
+const CreatePost = ({ refresh }) => {
   const [post, setPost] = useState("");
 
   function handleSubmit(ev) {
@@ -29,7 +29,7 @@ const CreatePost = ({refresh}) => {
             value={post}
             onChange={(e) => setPost(e.target.value)}
           />
-          <Button classes="bg-blue-500 text-white">Create Post</Button>
+          <Button className="bg-blue-500 text-white">Create Post</Button>
         </div>
       </form>
     </div>

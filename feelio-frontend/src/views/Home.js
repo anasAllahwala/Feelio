@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Post } from "../components";
 import { PostsApi } from "../api";
 import { useApi } from "../hooks";
@@ -18,7 +18,7 @@ const Home = () => {
         <h1 className="font-semibold text-xl">Home Page</h1>
       </div>
       <div className="mt-2">
-        <CreatePost refresh={refresh}/>
+        <CreatePost refresh={refresh} />
       </div>
       <div className="mt-2">
         {posts.length ? (

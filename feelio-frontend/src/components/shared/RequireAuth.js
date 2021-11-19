@@ -1,15 +1,16 @@
-import { useEffect } from "react";
-import { Navigate, useLocation } from "react-router";
+import React, { useEffect } from "react";
+import { useLocation, useNavigate } from "react-router";
 import { useAuth } from "../../hooks";
 
 const RequireAuth = ({ children }) => {
   let auth = useAuth();
   let location = useLocation();
+  let navigate = useNavigate();
   useEffect(() => {
     if (!auth.user) {
-      return <Navigate to="/login" state={{ from: location }} />;
+      navigate("/login", { state: { from: location } });
     }
-  }, [auth, location])
+  }, [auth, location]);
 
   return children;
 };

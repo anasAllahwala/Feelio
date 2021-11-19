@@ -1,12 +1,12 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Input } from ".";
 import { PostsApi } from "../../api";
 import { useIsOwner } from "../../hooks";
-import moment from 'moment';
+import moment from "moment";
 
 const Post = ({ post, refresh }) => {
   const { user_id, name, posted_at, post_id, image, body } = post;
-
+  console.log(user_id);
   const isOwner = useIsOwner(user_id);
 
   const [editing, setEditing] = useState(false);
@@ -30,7 +30,7 @@ const Post = ({ post, refresh }) => {
   }
 
   function saveEdit() {
-    PostsApi.edit({ post_id, body:editedBody })
+    PostsApi.edit({ post_id, body: editedBody })
       .then(({ data }) => {
         if (data.headers.error.toString() === "0") {
           alert("Post edited");

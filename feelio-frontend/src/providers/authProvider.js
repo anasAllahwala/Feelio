@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Auth } from "../api";
 
 import { AuthContext } from "../contexts";
@@ -10,7 +10,7 @@ const AuthProvider = ({ children }) => {
     Auth.Login(params)
       .then(({ data }) => {
         if (data.headers.error.toString() === "0") {
-          const {token, ...authUser} = data.body;
+          const { token, ...authUser } = data.body;
           setUser(authUser);
           localStorage.setItem("token", token);
           callback();
@@ -23,7 +23,7 @@ const AuthProvider = ({ children }) => {
     Auth.Register(params)
       .then(({ data }) => {
         if (data.headers.error.toString() === "0") {
-          const {token, ...authUser} = data.body;
+          const { token, ...authUser } = data.body;
           setUser(authUser);
           localStorage.setItem("token", token);
           callback();

@@ -1,7 +1,7 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Button, Input } from "../../components";
 import { useAuth } from "../../hooks";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -25,33 +25,52 @@ const Register = () => {
   return (
     <div>
       <p>Register</p>
-      <form onSubmit={handleSubmit}>
-        <Input
-          id="fullname"
-          type="text"
-          name="fullname"
-          label="Full Name"
-          onChange={(e) => setName(e.target.value)}
-          required
-        />
-        <Input
-          id="email"
-          type="email"
-          name="email"
-          label="Email"
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <Input
-          id="password"
-          type="password"
-          name="password"
-          label="Password"
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <Button>Register</Button>
-      </form>
+      <div className="max-w-md md:max-w-xl w-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+        <div className="shadow-lg rounded-md">
+          <dl className="p-5 border-b">
+            <dt className="font-semibold text-xl">Registration Form</dt>
+            <dd>Connect with your friends and family!</dd>
+          </dl>
+          <form className="p-5" onSubmit={handleSubmit}>
+            <Input
+              id="fullname"
+              type="text"
+              name="fullname"
+              label="Full Name"
+              className="flex-1"
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+            <Input
+              id="email"
+              type="email"
+              name="email"
+              label="Email"
+              className="mt-2 flex-1"
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <Input
+              id="password"
+              type="password"
+              name="password"
+              label="Password"
+              className="mt-2 flex-1"
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <Button className="block ml-auto bg-green-500 text-white mt-2">
+              Register
+            </Button>
+            <p className="text-center">
+              Already an user?{" "}
+              <Link className="text-blue-400" to="/login">
+                Login
+              </Link>
+            </p>
+          </form>
+        </div>
+      </div>
     </div>
   );
 };

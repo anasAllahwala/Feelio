@@ -1,4 +1,4 @@
-import "./App.css";
+import React from "react";
 import { Routes, Route } from "react-router-dom";
 import { CreatePost, Home, Login, Register } from "./views";
 import { RequireAuth } from "./components";
