@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { useAuth } from "../../hooks";
 
@@ -10,7 +10,7 @@ const RequireAuth = ({ children }) => {
     if (!auth.user) {
       navigate("/login", { state: { from: location } });
     }
-  }, [auth, location]);
+  }, [auth, location, navigate]);
 
   return children;
 };

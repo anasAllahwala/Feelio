@@ -4,19 +4,17 @@ import { PostsApi } from "../api";
 import { useApi } from "../hooks";
 import { CreatePost } from ".";
 
-const Home = () => {
+const Home = ({ title }) => {
   const [posts, setPosts] = useState([]);
   const { refresh, result } = useApi(PostsApi.fetch, null, null);
 
   useEffect(() => {
+    title("Home");
     if (result) setPosts(Object.values(result));
   }, [result]);
 
   return (
     <div>
-      <div className="flex justify-between">
-        <h1 className="font-semibold text-xl">Home Page</h1>
-      </div>
       <div className="mt-2">
         <CreatePost refresh={refresh} />
       </div>

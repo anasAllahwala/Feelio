@@ -1,12 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Input } from "../../components";
 import { useAuth } from "../../hooks";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
-const Login = () => {
+const Login = ({ title }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   let auth = useAuth();
+
+  useEffect(() => {
+    title("Login");
+  }, []);
+
   let location = useLocation();
   let navigate = useNavigate();
 
@@ -22,7 +27,6 @@ const Login = () => {
 
   return (
     <div className="">
-      <p>Login</p>
       <div className="max-w-md md:max-w-xl w-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
         <div className="shadow-lg rounded-md">
           <dl className="p-5 border-b">

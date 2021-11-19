@@ -1,12 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Input } from "../../components";
 import { useAuth } from "../../hooks";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
-const Register = () => {
+const Register = ({ title }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  useEffect(() => {
+    title("Register");
+  }, []);
 
   let auth = useAuth();
   let location = useLocation();
@@ -24,7 +28,6 @@ const Register = () => {
 
   return (
     <div>
-      <p>Register</p>
       <div className="max-w-md md:max-w-xl w-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
         <div className="shadow-lg rounded-md">
           <dl className="p-5 border-b">
