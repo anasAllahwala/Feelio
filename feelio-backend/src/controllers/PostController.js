@@ -30,6 +30,7 @@ class PostController{
 
     getPostByFriends(req, res, next){
         const { user_id } = req;
+        const { last_post_id } = req.body;
 
         function callback(error, results){
             if (error) {
@@ -49,7 +50,7 @@ class PostController{
             }
         }
 
-        PostModel.findByFriends({ user_id, cb: callback });
+        PostModel.findByFriends({ user_id, last_post_id, cb: callback });
     }
 
     create(req, res, next){
