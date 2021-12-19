@@ -1,0 +1,27 @@
+const { DBService } = require("../services/DBService");
+
+class ChatModel {
+  
+  newMessage({ friend_request_id, user_id, message, cb }) {
+    DBService.dbPool.query(
+      "INSERT INTO chat (friend_request_id, user_id, message) VALUES (?, ?, ?)",
+      [friend_request_id, user_id, message],
+      (error, results) => {
+        cb(error, results.insertId);
+      }
+    );
+  }
+
+  getMessages({ friend_request_id, cb }) {
+    DBService.dbPool.query(
+      "SELECT name, message, date FROM chat LEFT JOIN users ON users.user_id = chat.user_id WHERE chat.friend_request_id = ?",
+      [friend_request_id],
+      (error, results) => {
+        cb(error, results);
+      }
+    );
+  }
+
+}
+
+module.exports.ChatModel = new ChatModel();
