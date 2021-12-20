@@ -5,7 +5,7 @@ const responseInterceptor = (instance) => {
     },
     function (error) {
       if (error.response.status === 401) {
-        console.log(error.response);
+        // console.log(error.response);
         localStorage.removeItem("token");
       }
       return Promise.reject(error);

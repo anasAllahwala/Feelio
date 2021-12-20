@@ -14,9 +14,7 @@ const Chats = ({ title }) => {
           setFriends(Object.values(data.body));
         }
       })
-      .catch((e) => console.log(e));
-
-    
+      .catch((e) => console.error(e));
   }, []);
 
   function startChat(friend_request_id) {
@@ -28,7 +26,9 @@ const Chats = ({ title }) => {
       {friends.map((friend, key) => (
         <div key={key}>
           <p>{friend.friend_name}</p>
-          <Button onClick={() => startChat(friend.friend_id)}>Message</Button>
+          <Button onClick={() => startChat(friend.friend_request_id)}>
+            Message
+          </Button>
         </div>
       ))}
     </div>

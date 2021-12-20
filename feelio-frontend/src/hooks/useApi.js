@@ -9,7 +9,8 @@ const useApi = (axiosFunction, params, initial) => {
     axiosFunction(params)
       .then(({ data }) => {
         if (data.headers.error.toString() === "0") {
-          setResult(data.body);
+          if (Array.isArray(initial)) setResult(Object.values(data.body));
+          else setResult(data.body);
         }
       })
       .catch((e) => setError(e))

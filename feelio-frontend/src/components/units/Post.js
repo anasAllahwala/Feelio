@@ -6,7 +6,6 @@ import moment from "moment";
 
 const Post = ({ post, refresh }) => {
   const { user_id, name, posted_at, post_id, image, body } = post;
-  console.log(user_id);
   const isOwner = useIsOwner(user_id);
 
   const [editing, setEditing] = useState(false);

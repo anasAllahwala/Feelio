@@ -7,7 +7,6 @@ const useIsOwner = (user_id) => {
   let { user } = useAuth();
 
   useEffect(() => {
-    console.log(user);
     if (user) setIsOwner(user.user_id === user_id);
   }, [user, user_id]);
 

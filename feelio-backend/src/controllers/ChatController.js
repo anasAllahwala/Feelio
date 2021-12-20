@@ -23,11 +23,9 @@ class ChatController {
   }
 
   newMessage(req, res, next) {
-    
     const { user_id } = req;
     const { friend_request_id } = req.params;
     const { message } = req.body;
-    console.log(friend_request_id);
 
     function callback(error, results) {
       if (error) {

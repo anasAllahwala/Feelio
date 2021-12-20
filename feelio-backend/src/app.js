@@ -26,16 +26,14 @@ const io = new Server(httpServer, {
   cors: { origin: "http://localhost:3000", methods: ["*"] },
 });
 
-io.of("/chat").on("connection", (socket) => {
+io.on("connection", (socket) => {
   let room = "";
 
   socket.on("Start_Chat", function (data) {
     socket_rooms = socket.rooms;
-
     //Allow user to join only 1 chat room at a time
-    if (socket_rooms <= 1) {
+    if (socket_rooms.size <= 1) {
       room = data.friend_request_id;
-
       socket.join(room);
 
       socket.to(room).emit("user_join");

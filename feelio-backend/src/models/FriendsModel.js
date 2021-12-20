@@ -13,7 +13,7 @@ class FriendsModel {
 
   findAcceptedByUser({ user_id, cb }) {
     DBService.dbPool.query(
-      "SELECT IF(sender_id = ?, receiver_id, sender_id) as friend_id, users.name as friend_name, friend_request_date FROM friend_requests INNER JOIN users ON IF(sender_id = ?, receiver_id, sender_id) = users.user_id WHERE status = 'Accepted' AND (sender_id = ? OR receiver_id = ?) ORDER BY friend_request_date DESC",
+      "SELECT friend_request_id, IF(sender_id = ?, receiver_id, sender_id) as friend_id, users.name as friend_name, friend_request_date FROM friend_requests INNER JOIN users ON IF(sender_id = ?, receiver_id, sender_id) = users.user_id WHERE status = 'Accepted' AND (sender_id = ? OR receiver_id = ?) ORDER BY friend_request_date DESC",
       [user_id, user_id, user_id, user_id],
       (error, results) => {
         cb(error, results);
@@ -58,7 +58,6 @@ class FriendsModel {
         "INSERT INTO friend_requests (sender_id, receiver_id) VALUES (?, ?)",
         [user_id, friend_id],
         (error, results) => {
-          console.log(error);
           cb(error, results.insertId);
         }
       );

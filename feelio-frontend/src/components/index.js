@@ -1,4 +1,4 @@
-import { Navbar, RequireAuth } from "./global";
+import { Chat, Navbar, RequireAuth } from "./global";
 import { Post, Input, Button } from "./units";
 
-export { Post, RequireAuth, Input, Button, Navbar };
+export { Post, RequireAuth, Input, Button, Navbar, Chat };

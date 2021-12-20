@@ -1,25 +1,34 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
 import { ChatsApi } from "../../api";
 import { API } from "../../constants";
 import { io } from "socket.io-client";
-import { Button, Input } from "../../components";
+import { Button } from "../../components";
 
-const Chat = () => {
+const Chat = ({ friend_request_id }) => {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
-
-  const params = useParams();
 
   const socket = useRef(null);
 
   useEffect(() => {
-    socket.current = io(API.BASE_URL);
-    socket.current.connect();
+    if (!socket.current) {
+      socket.current = io(API.BASE_URL);
+      socket.current.connect();
 
-    socket.current.emit("Start_chat", { friend_request_id: params.chatId });
+      socket.current.on("connect", () => {
+        socket.current.emit("Start_Chat", { friend_request_id });
 
-    ChatsApi.fetchMessages(params.chatId)
+        socket.current.on("user_join", () => {
+          console.log("User has joined!");
+        });
+        socket.current.on("message", (data) => {
+          // console.log(data);
+          setMessages((m) => [...m, data]);
+        });
+      });
+    }
+
+    ChatsApi.fetchMessages(friend_request_id)
       .then(({ data }) => {
         if (data.headers.error.toString() === "0") {
           setMessages(Object.values(data.body));
@@ -30,33 +39,47 @@ const Chat = () => {
     return () => {
       socket.current.disconnect();
     };
-  }, [params]);
+  }, [friend_request_id]);
 
   function sendMessage() {
-    ChatsApi.sendMessage(params.chatId, message)
+    ChatsApi.sendMessage(friend_request_id, message)
       .then(({ data }) => {
         if (data.headers.error.toString() === "0") {
-          alert(data.headers.message);
+          socket.current.emit("message", data.body);
+          setMessages((m) => [...m, data.body]);
         }
       })
-      .catch((e) => console.error(e));
+      .catch((e) => console.error(e))
+      .finally(() => {
+        setMessage("");
+      });
   }
 
   return (
-    <div>
-      {messages.map((message, key) => (
-        <div key={key}>
-          <p className="font-semibold">{message.name}</p>
-          <p>{message.message}</p>
-        </div>
-      ))}
-      <Input
-        id="send-message"
-        type="text"
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-      />
-      <Button onClick={() => sendMessage()}>Send</Button>
+    <div className="border">
+      <div className=" max-h-96 overflow-y-auto">
+        {messages.map((message, key) => (
+          <div className="py-2 px-5 border-b" key={key}>
+            <p className="font-semibold">{message.name}</p>
+            <p>{message.message}</p>
+          </div>
+        ))}
+      </div>
+      <div className="flex">
+        <input
+          id="send-message"
+          type="text"
+          className="flex-1"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+        />
+        <Button
+          className="bg-blue-600 text-white"
+          onClick={() => sendMessage()}
+        >
+          Send
+        </Button>
+      </div>
     </div>
   );
 };
