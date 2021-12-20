@@ -15,7 +15,6 @@ const Login = ({ title }) => {
 
   useEffect(() => {
     title("Login");
-
     if (auth.token) {
       navigate(from, { replace: true });
     }

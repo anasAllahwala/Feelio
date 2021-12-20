@@ -32,7 +32,6 @@ const verifyToken = (req, res, next) => {
 
     let user_id = decoded.user_id;
     req.user_id = user_id;
-
     next();
   } catch (e) {
     next(e);

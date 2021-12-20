@@ -64,13 +64,16 @@ const AuthProvider = ({ children }) => {
           .then(({ data }) => {
             if (data.headers.error.toString() === "0") {
               let { token: userToken } = data.body;
+
               localStorage.setItem("token", userToken);
               token = userToken;
+
+              dispatch({ type: "SIGN_IN", token });
             }
           })
           .catch((e) => console.error(e));
 
-        dispatch({ type: "SIGN_IN", token });
+        
       },
       signOut: async () => {
         dispatch({ type: "SIGN_OUT" });
@@ -81,11 +84,11 @@ const AuthProvider = ({ children }) => {
         dispatch({ type: "SIGN_IN", token });
       },
     }),
-    [state.userToken, state.isLoading]
+    [state]
   );
 
   useEffect(() => {
-    // console.log(authContext);
+    // console.log(state, authContext);
   }, [state]);
 
   return (

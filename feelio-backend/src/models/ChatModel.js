@@ -14,7 +14,7 @@ class ChatModel {
 
   getMessages({ friend_request_id, cb }) {
     DBService.dbPool.query(
-      "SELECT name, message, date FROM chat LEFT JOIN users ON users.user_id = chat.user_id WHERE chat.friend_request_id = ?",
+      "SELECT name, message, created_at FROM chat LEFT JOIN users ON users.user_id = chat.user_id WHERE chat.friend_request_id = ?",
       [friend_request_id],
       (error, results) => {
         cb(error, results);

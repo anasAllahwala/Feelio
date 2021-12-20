@@ -1,3 +1,3 @@
 import authInterceptor from "./authInterceptor";
-
-export { authInterceptor };
+import responseInterceptor from "./responseInterceptor";
+export { authInterceptor, responseInterceptor };

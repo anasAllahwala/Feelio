@@ -13,7 +13,9 @@ const RequireAuth = ({ children }) => {
     }
   }, [auth, location, navigate]);
 
-  return children;
+  if (!auth.isLoading && auth.token) return children;
+
+  return null;
 };
 
 export default RequireAuth;
