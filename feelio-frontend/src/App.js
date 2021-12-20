@@ -25,22 +25,7 @@ function App() {
             </RequireAuth>
           }
         ></Route>
-        <Route
-          path="/chats"
-          element={
-            <RequireAuth>
-              <Chats title={setTitle} />
-            </RequireAuth>
-          }
-        ></Route>
-        <Route
-          path="/chats/:chatId"
-          element={
-            <RequireAuth>
-              <Chat title={setTitle} />
-            </RequireAuth>
-          }
-        ></Route>
+
         <Route path="/register" element={<Register title={setTitle} />} />
         <Route path="/login" element={<Login title={setTitle} />} />
       </Routes>

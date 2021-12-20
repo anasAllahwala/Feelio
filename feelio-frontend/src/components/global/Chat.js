@@ -10,7 +10,10 @@ const Chat = (props) => {
         onClick={() => setChatVisibility(!chatVisible)}
         className="border px-5 w-full  h-10 flex items-center"
       >
-        <h1 className="font-semibold">{props.title}</h1>
+        <div className="flex justify-between w-full">
+          <h1 className="font-semibold">{props.title}</h1>
+          <div onClick={() => props.close(props.chatId)}>&times;</div>
+        </div>
       </button>
     </div>
   );

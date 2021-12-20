@@ -1,9 +1,11 @@
-import React, { useEffect, useMemo, useReducer } from "react";
+import React, { useEffect, useMemo, useReducer, useState } from "react";
 import { Auth } from "../api";
 
 import { AuthContext } from "../contexts";
 
 const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+
   const [state, dispatch] = useReducer(
     (prevState, action) => {
       switch (action.type) {
@@ -49,15 +51,26 @@ const AuthProvider = ({ children }) => {
       }
 
       dispatch({ type: "RESTORE_TOKEN", token });
+
+      getUser();
     };
 
     bootstrapAsync();
   }, []);
 
+  function getUser() {
+    Auth.Profile()
+      .then(({ data }) => {
+        if (data.headers.error.toString() === "0") setUser(data.body);
+      })
+      .catch((e) => console.error(e));
+  }
+
   const authContext = useMemo(
     () => ({
       token: state.userToken,
       isLoading: state.isLoading,
+      user,
       signin: async (data) => {
         let token = null;
         Auth.Login(data)
@@ -69,22 +82,24 @@ const AuthProvider = ({ children }) => {
               token = userToken;
 
               dispatch({ type: "SIGN_IN", token });
+              getUser();
             }
           })
           .catch((e) => console.error(e));
-
-        
       },
       signOut: async () => {
         dispatch({ type: "SIGN_OUT" });
+        setUser(null);
+        localStorage.removeItem("token");
       },
       register: async (data) => {
         let token = null;
         localStorage.setItem("token", token);
         dispatch({ type: "SIGN_IN", token });
+        getUser();
       },
     }),
-    [state]
+    [state, user]
   );
 
   useEffect(() => {
