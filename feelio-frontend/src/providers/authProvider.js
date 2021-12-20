@@ -25,6 +25,10 @@ const AuthProvider = ({ children }) => {
             isLoggedin: false,
             userToken: null,
           };
+        default:
+          return {
+            ...prevState,
+          };
       }
     },
     {

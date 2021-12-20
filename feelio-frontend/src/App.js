@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Routes, Route } from "react-router-dom";
-import { FriendRequests, Home, Login, Register } from "./views";
+import { Chat, FriendRequests, Home, Login, Register } from "./views";
 import { Navbar, RequireAuth } from "./components";
 
 function App() {
@@ -22,6 +22,14 @@ function App() {
           element={
             <RequireAuth>
               <FriendRequests title={setTitle} />
+            </RequireAuth>
+          }
+        ></Route>
+        <Route
+          path="/chat"
+          element={
+            <RequireAuth>
+              <Chat title={setTitle} />
             </RequireAuth>
           }
         ></Route>
