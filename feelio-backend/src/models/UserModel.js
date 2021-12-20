@@ -7,7 +7,7 @@ class UserModel {
       "SELECT user_id, name, email from users where user_id = ?",
       [user_id],
       (error, results) => {
-        cb(error, results);
+        cb(error, results[0]);
       }
     );
   }

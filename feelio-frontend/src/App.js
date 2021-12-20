@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Routes, Route } from "react-router-dom";
-import { Home, Login, Register } from "./views";
+import { FriendRequests, Home, Login, Register } from "./views";
 import { Navbar, RequireAuth } from "./components";
 
 function App() {
@@ -14,6 +14,14 @@ function App() {
           element={
             <RequireAuth>
               <Home title={setTitle} />
+            </RequireAuth>
+          }
+        ></Route>
+        <Route
+          path="/friends"
+          element={
+            <RequireAuth>
+              <FriendRequests title={setTitle} />
             </RequireAuth>
           }
         ></Route>

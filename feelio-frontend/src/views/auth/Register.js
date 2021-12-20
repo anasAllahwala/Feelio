@@ -10,7 +10,7 @@ const Register = ({ title }) => {
 
   useEffect(() => {
     title("Register");
-  }, []);
+  }, [title]);
 
   let auth = useAuth();
   let location = useLocation();

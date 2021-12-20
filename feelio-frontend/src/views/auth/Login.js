@@ -8,21 +8,23 @@ const Login = ({ title }) => {
   const [password, setPassword] = useState("");
   let auth = useAuth();
 
-  useEffect(() => {
-    title("Login");
-  }, []);
-
   let location = useLocation();
   let navigate = useNavigate();
 
   let from = location.state?.from?.pathname || "/";
 
+  useEffect(() => {
+    title("Login");
+
+    if (auth.token) {
+      navigate(from, { replace: true });
+    }
+  }, [title, auth.token, navigate, from]);
+
   function handleSubmit(ev) {
     ev.preventDefault();
 
-    auth.signin({ email, password }, () => {
-      navigate(from, { replace: true });
-    });
+    auth.signin({ email, password });
   }
 
   return (

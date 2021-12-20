@@ -11,7 +11,7 @@ const Home = ({ title }) => {
   useEffect(() => {
     title("Home");
     if (result) setPosts(Object.values(result));
-  }, [result]);
+  }, [result, title]);
 
   return (
     <div>

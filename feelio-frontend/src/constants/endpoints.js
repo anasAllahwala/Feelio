@@ -11,7 +11,20 @@ const POSTS = "posts";
 
 // Friends Endpoints
 const FRIENDS = "friends";
+const FRIEND_REQUESTS = "friends/requests";
+const ACCEPT_FRIEND_REQUEST = "friends/requests/accept";
+const REJECT_FRIEND_REQUEST = "friends/requests/reject";
 
-const API = { LOGIN, REGISTER, PROFILE, POSTS, FRIENDS, BASE_URL };
+const API = {
+  LOGIN,
+  REGISTER,
+  PROFILE,
+  POSTS,
+  FRIENDS,
+  BASE_URL,
+  FRIEND_REQUESTS,
+  ACCEPT_FRIEND_REQUEST,
+  REJECT_FRIEND_REQUEST,
+};
 
 export default API;
