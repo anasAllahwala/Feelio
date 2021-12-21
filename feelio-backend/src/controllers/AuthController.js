@@ -108,6 +108,54 @@ class AuthController {
     UserModel.create({ ...req.body, cb: callback });
   }
 
+  // :(
+  /*
+  resetPassword(req, res, next) {
+    const { email } = req.body;
+
+    if (!email) {
+      const err = new RegistrationFailedException(
+        "Name, Email and Password is required!"
+      );
+      next(err);
+    }
+
+    function callback(error, user_id) {
+      if (!error) {
+        if (!user_id) {
+          res.json({
+            headers: { error: 1, message: "Email is already registered!" },
+            body: {},
+          });
+
+          return;
+        }
+
+        // Create token
+        const token = jwt.sign({ user_id }, process.env.JWT_SECRET_KEY, {
+          expiresIn: "2h",
+        });
+
+        res.json(
+          successResponse(
+            {
+              name,
+              email,
+              token,
+            },
+            "Registered successfully!"
+          )
+        );
+      } else {
+        const err = new RegistrationFailedException("Registration Failed!");
+        next(err);
+      }
+    }
+
+    UserModel.create({ ...req.body, cb: callback });
+  }
+  */
+
   profile(req, res, next) {
     const { user_id } = req;
 
@@ -132,6 +180,33 @@ class AuthController {
     }
 
     UserModel.findById({ user_id, cb: callback });
+  }
+
+  changePassword(req, res, next) {
+    const { user_id } = req;
+    const { password } = req.body;
+
+    function callback(err, results) {
+      if (!err) {
+        res.json(
+          successResponse(
+            {
+              ...results,
+            },
+            "Password changed successfully!"
+          )
+        );
+      } else {
+        res.json({
+          header: {
+            error: "1",
+            message: "Request Failed!",
+          },
+        });
+      }
+    }
+
+    UserModel.changePassword({ user_id, password, cb: callback });
   }
 }
 

@@ -57,7 +57,7 @@ io.on("connection", (socket) => {
   });
 });
 
-UserModel.resetPassword({user_id: 3});
+//UserModel.resetPassword({email: "a"});
 
 httpServer.listen(process.env.PORT, (err) => {
   if (err) {
