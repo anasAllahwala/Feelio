@@ -8,15 +8,19 @@ const Register = ({ title }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  useEffect(() => {
-    title("Register");
-  }, [title]);
-
   let auth = useAuth();
   let location = useLocation();
   let navigate = useNavigate();
 
   let from = location.state?.from?.pathname || "/";
+
+  useEffect(() => {
+    title("Register");
+
+    if (auth.user) {
+      navigate(from, { replace: true });
+    }
+  }, [title, from, auth.user, navigate]);
 
   function handleSubmit(ev) {
     ev.preventDefault();

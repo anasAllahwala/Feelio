@@ -15,11 +15,17 @@ const AuthProvider = ({ children }) => {
             userToken: action.token,
             isLoading: false,
           };
+        case "SIGN_IN_FAILED":
+          return {
+            ...prevState,
+            isLoading: false,
+          };
         case "SIGN_IN":
           return {
             ...prevState,
             userToken: action.token,
             isLoggedin: true,
+            isLoading: false,
           };
         case "SIGN_OUT":
           return {
@@ -50,20 +56,31 @@ const AuthProvider = ({ children }) => {
         console.error(e);
       }
 
-      dispatch({ type: "RESTORE_TOKEN", token });
-
-      getUser();
+      if (token) {
+        getUser(token);
+      } else {
+        dispatch({ type: "SIGN_IN_FAILED" });
+      }
     };
 
     bootstrapAsync();
   }, []);
 
-  function getUser() {
+  function getUser(token) {
     Auth.Profile()
       .then(({ data }) => {
-        if (data.headers.error.toString() === "0") setUser(data.body);
+        if (data.headers.error.toString() === "0") {
+          setUser(data.body);
+          dispatch({ type: "SIGN_IN", token });
+        } else {
+          dispatch({ type: "SIGN_IN_FAILED" });
+        }
       })
-      .catch((e) => console.error(e));
+      .catch((e) => {
+        console.error(e);
+
+        dispatch({ type: "SIGN_IN_FAILED" });
+      });
   }
 
   const authContext = useMemo(
@@ -81,8 +98,11 @@ const AuthProvider = ({ children }) => {
               localStorage.setItem("token", userToken);
               token = userToken;
 
-              dispatch({ type: "SIGN_IN", token });
-              getUser();
+              if (token) {
+                getUser(token);
+              }
+            } else {
+              dispatch({ type: "SIGN_IN_FAILED" });
             }
           })
           .catch((e) => console.error(e));
@@ -94,17 +114,26 @@ const AuthProvider = ({ children }) => {
       },
       register: async (data) => {
         let token = null;
-        localStorage.setItem("token", token);
-        dispatch({ type: "SIGN_IN", token });
-        getUser();
+        Auth.Register(data)
+          .then(({ data }) => {
+            if (data.headers.error.toString() === "0") {
+              let { token: userToken } = data.body;
+              localStorage.setItem("token", userToken);
+              token = userToken;
+              if (token) {
+                getUser(token);
+              }
+            }
+          })
+          .catch((e) => console.error(e));
       },
     }),
     [state, user]
   );
 
-  useEffect(() => {
-    // console.log(state, authContext);
-  }, [state]);
+  // useEffect(() => {
+  //   console.log(state, authContext);
+  // }, [state]);
 
   return (
     <AuthContext.Provider value={authContext}>{children}</AuthContext.Provider>

@@ -70,6 +70,12 @@ class FriendController {
 
   getFriends(req, res, next) {
     const { user_id } = req;
+    const {req_user} = req.params;
+
+    let user = user_id;
+
+    if(req_user)user = req_user;
+
     function callback(errors, results) {
       if (errors) {
         console.error(error);
@@ -79,7 +85,7 @@ class FriendController {
         );
       }
     }
-    FriendsModel.findAcceptedByUser({ user_id, cb: callback });
+    FriendsModel.findAcceptedByUser({ user_id: user, cb: callback });
   }
 }
 

@@ -9,6 +9,10 @@ const fetchPendingRequests = () => {
   return axiosInstance.get(API.FRIEND_REQUESTS);
 };
 
+const fetchFriendsByUser = (params) => {
+  return axiosInstance.get(API.FRIENDS + "/" +params.user);
+}
+
 const acceptFriendRequest = (data) => {
   return axiosInstance.patch(API.ACCEPT_FRIEND_REQUEST, data);
 };
@@ -23,6 +27,7 @@ const sendFriendRequest = (data) => {
 
 const FriendsApi = {
   fetchPendingRequests,
+  fetchFriendsByUser,
   acceptFriendRequest,
   rejectFriendRequest,
   sendFriendRequest,

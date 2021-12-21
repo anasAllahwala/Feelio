@@ -2,7 +2,7 @@ const { AdminModel } = require("../models/AdminModel");
 const { successResponse } = require("../utils/responses");
 
 class AdminController{
-
+  
   getTotalUsers(req, res, next){
 
     function callback(error, results){

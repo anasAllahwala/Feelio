@@ -8,12 +8,13 @@ const RequireAuth = ({ children }) => {
   let navigate = useNavigate();
 
   useEffect(() => {
-    if (!auth.token && !auth.isLoading) {
+    if (!auth.user && !auth.isLoading) {
+      // console.log(auth);
       navigate("/login", { state: { from: location } });
     }
   }, [auth, location, navigate]);
 
-  if (!auth.isLoading && auth.token) return children;
+  if (!auth.isLoading && auth.user) return children;
 
   return null;
 };

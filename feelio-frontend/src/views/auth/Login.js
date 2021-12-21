@@ -15,10 +15,10 @@ const Login = ({ title }) => {
 
   useEffect(() => {
     title("Login");
-    if (auth.token) {
+    if (auth.user) {
       navigate(from, { replace: true });
     }
-  }, [title, auth.token, navigate, from]);
+  }, [title, auth.user, navigate, from]);
 
   function handleSubmit(ev) {
     ev.preventDefault();

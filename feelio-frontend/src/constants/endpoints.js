@@ -8,6 +8,7 @@ const PROFILE = "auth/profile";
 
 // Post Endpoints
 const POSTS = "posts";
+const USER_POSTS = "posts/user/";
 
 // Friends Endpoints
 const FRIENDS = "friends";
@@ -24,6 +25,7 @@ const API = {
   REGISTER,
   PROFILE,
   POSTS,
+  USER_POSTS,
   FRIENDS,
   BASE_URL,
   FRIEND_REQUESTS,

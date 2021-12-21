@@ -42,6 +42,25 @@ class PostModel {
     });
   }
 
+  findByUser({ user_id, last_post_id, cb }) {
+    let params = [user_id];
+
+    let post_condition = "";
+
+    if (last_post_id) {
+      post_condition = "AND post_id < ?";
+      params.push(last_post_id);
+    }
+    let sql =
+      "SELECT post_id, body, image, posts.user_id, users.name, posted_at FROM posts LEFT JOIN users ON users.user_id = posts.user_id WHERE posts.user_id = ? " +
+      post_condition +
+      " ORDER BY post_id DESC LIMIT 25";
+
+    DBService.dbPool.query(sql, params, (error, results) => {
+      cb(error, results);
+    });
+  }
+
   create({ body, image, user_id, cb }) {
     DBService.dbPool.query(
       "INSERT INTO posts (body, image, user_id) VALUES (?, ?, ?)",

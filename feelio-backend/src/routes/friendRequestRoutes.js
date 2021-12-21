@@ -18,4 +18,7 @@ friendsRouter.patch("/requests/reject", auth, FriendController.decline);
 /* Get Friends */
 friendsRouter.get("/", auth, FriendController.getFriends);
 
+/* Get Friends By User */
+friendsRouter.get("/:req_user", auth, FriendController.getFriends);
+
 module.exports = friendsRouter;

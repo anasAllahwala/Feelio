@@ -110,9 +110,10 @@ class AuthController {
 
   profile(req, res, next) {
     const { user_id } = req;
+    const { req_user_id } = req.params;
 
     function callback(err, results) {
-      if (!err) {
+      if (!err && results) {
         res.json(
           successResponse(
             {
@@ -123,15 +124,18 @@ class AuthController {
         );
       } else {
         res.json({
-          header: {
+          headers: {
             error: "1",
             message: "Request Failed!",
           },
         });
       }
     }
+    let user = null;
+    if (req_user_id) user = req_user_id;
+    else user = user_id;
 
-    UserModel.findById({ user_id, cb: callback });
+    UserModel.findById({ user_id: user, cb: callback });
   }
 }
 

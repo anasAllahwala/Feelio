@@ -9,8 +9,12 @@ const Register = (params) => {
   return axiosInstance.post(API.REGISTER, params);
 };
 
-const Profile = () => {
-  return axiosInstance.get(API.PROFILE, null);
+const Profile = (params) => {
+  let param = "";
+  if(params){
+    param = "/" + params.user;
+  }
+  return axiosInstance.get(API.PROFILE + param, null);
 };
 
 const Auth = { Login, Register, Profile };

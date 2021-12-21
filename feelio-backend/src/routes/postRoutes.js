@@ -9,6 +9,9 @@ postRouter.get("/", auth, PostController.getPostByFriends);
 /* Get Posts */
 postRouter.get("/post", auth, PostController.getPost);
 
+/* Get User Posts */
+postRouter.get("/user/:user_id", auth, PostController.getPostsByUser);
+
 /* Create Post */
 postRouter.post("/", auth, PostController.create);
 

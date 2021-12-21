@@ -2,9 +2,20 @@ const { hash } = require("../helpers/hash");
 const { DBService } = require("../services/DBService");
 
 class UserModel {
+
+  findRoleById({user_id, cb}){
+    DBService.dbPool.query(
+      "SELECT role_id, role_name from users LEFT JOIN roles on users.role_id = roles.role_id where user_id = ?",
+      [user_id],
+      (error, results) => {
+        cb(error, results[0]);
+      }
+    );
+  }
+
   findById({ user_id, cb }) {
     DBService.dbPool.query(
-      "SELECT user_id, name, email from users where user_id = ?",
+      "SELECT user_id, name, email, role_name from users LEFT JOIN roles on users.role_id = roles.role_id where user_id = ?",
       [user_id],
       (error, results) => {
         cb(error, results[0]);
@@ -25,10 +36,16 @@ class UserModel {
   create({ name, email, password, cb }) {
     password = hash.create(password);
     DBService.dbPool.query(
-      "INSERT INTO users (name, email, password) VALUES (?, ?, ?)",
-      [name, email, password],
+      "SELECT `role_id` FROM roles WHERE `role_name`='user'",
+      [],
       (error, results) => {
-        cb(error, results?.insertId);
+        DBService.dbPool.query(
+          "INSERT INTO users (name, email, password, role_id) VALUES (?, ?, ?, ?)",
+          [name, email, password, results[0].role_id],
+          (error, results) => {
+            cb(error, results?.insertId);
+          }
+        );
       }
     );
   }

@@ -3,6 +3,7 @@ import { Input } from ".";
 import { PostsApi } from "../../api";
 import { useIsOwner } from "../../hooks";
 import moment from "moment";
+import { Link } from "react-router-dom";
 
 const Post = ({ post, refresh }) => {
   const { user_id, name, posted_at, post_id, image, body } = post;
@@ -44,7 +45,9 @@ const Post = ({ post, refresh }) => {
     <div className="shadow-md">
       <div className="flex justify-between  p-5">
         <div>
-          <h5 className="text-blue-600 font-semibold">{name}</h5>
+          <Link to={"/profile/" + user_id}>
+            <h5 className="text-blue-600 font-semibold">{name}</h5>
+          </Link>
           <p>{moment(posted_at).fromNow()}</p>
         </div>
         {isOwner ? (

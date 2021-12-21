@@ -8,11 +8,7 @@ const Home = ({ title }) => {
   const [posts, setPosts] = useState([]);
   const [chats, setChats] = useState([]);
   const [chatVisible, setChatVisibility] = useState(false);
-  const { result: friends, loading } = useApi(
-    FriendsApi.fetchFriends,
-    null,
-    []
-  );
+  const { result: friends } = useApi(FriendsApi.fetchFriends, null, []);
 
   const { refresh, result } = useApi(PostsApi.fetch, null, null);
 
@@ -31,7 +27,7 @@ const Home = ({ title }) => {
     });
 
     currentChats.splice(chatIndex, 1);
-    setChats(currentChats)
+    setChats(currentChats);
   }
 
   function chatContainer(chat, key) {
