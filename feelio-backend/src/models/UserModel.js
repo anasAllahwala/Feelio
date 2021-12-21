@@ -33,6 +33,18 @@ class UserModel {
     );
   }
 
+  resetPassword({ user_id/*, cb*/ }) {
+    const code = hash.create(user_id + Date.now().toString());
+    console.log(code.length);
+    /*DBService.dbPool.query(
+      "INSERT INTO users (name, email, password) VALUES (?, ?, ?)",
+      [name, email, password],
+      (error, results) => {
+        cb(error, results?.insertId);
+      }
+    );*/
+  }
+
   login({ email, cb }) {
     this.findByEmail({ email, cb });
   }
