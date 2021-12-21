@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 19, 2021 at 01:18 PM
+-- Generation Time: Dec 21, 2021 at 08:43 PM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.3
 
@@ -36,6 +36,14 @@ CREATE TABLE `chat` (
   `date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `chat`
+--
+
+INSERT INTO `chat` (`chat_id`, `friend_request_id`, `user_id`, `message`, `date`) VALUES
+(1, 1, 3, 'adasdasdasda', '2021-12-19 15:29:21'),
+(2, 1, 4, 'testingggg', '2021-12-18 15:29:21');
+
 -- --------------------------------------------------------
 
 --
@@ -49,6 +57,13 @@ CREATE TABLE `friend_requests` (
   `status` enum('Accepted','Pending','Declined') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Pending',
   `friend_request_date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `friend_requests`
+--
+
+INSERT INTO `friend_requests` (`friend_request_id`, `sender_id`, `receiver_id`, `status`, `friend_request_date`) VALUES
+(1, 3, 4, 'Accepted', '2021-12-19 15:28:59');
 
 -- --------------------------------------------------------
 
@@ -64,6 +79,40 @@ CREATE TABLE `posts` (
   `posted_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `posts`
+--
+
+INSERT INTO `posts` (`post_id`, `body`, `image`, `user_id`, `posted_at`) VALUES
+(2, 'test1', NULL, 3, '2021-12-21 16:33:13'),
+(3, 'test2', NULL, 4, '2021-12-21 16:33:27'),
+(4, 'test3', NULL, 3, '2021-12-21 16:33:27'),
+(5, 'test', NULL, 3, '2021-12-21 16:33:13'),
+(6, 'test1', NULL, 3, '2021-12-21 16:33:13'),
+(7, 'test2', NULL, 4, '2021-12-21 16:33:27'),
+(8, 'test3', NULL, 3, '2021-12-21 16:33:27'),
+(9, 'test', NULL, 3, '2021-12-21 16:33:13'),
+(10, 'test1', NULL, 3, '2021-12-21 16:33:13'),
+(11, 'test2', NULL, 4, '2021-12-21 16:33:27'),
+(12, 'test3', NULL, 3, '2021-12-21 16:33:27'),
+(13, 'test', NULL, 3, '2021-12-21 16:33:13'),
+(14, 'test1', NULL, 3, '2021-12-21 16:33:13'),
+(15, 'test2', NULL, 4, '2021-12-21 16:33:27'),
+(16, 'test3', NULL, 3, '2021-12-21 16:33:27');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `reset_password`
+--
+
+CREATE TABLE `reset_password` (
+  `reset_password_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `code` varchar(100) NOT NULL,
+  `reset_password_date` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 -- --------------------------------------------------------
 
 --
@@ -77,6 +126,14 @@ CREATE TABLE `users` (
   `password` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
   `signup_date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`user_id`, `name`, `email`, `password`, `signup_date`) VALUES
+(3, 'Hassan', 'a', '', '2021-12-19 15:28:43'),
+(4, 'Furqan', 'b', '', '2021-12-19 15:28:43');
 
 --
 -- Indexes for dumped tables
@@ -106,6 +163,13 @@ ALTER TABLE `posts`
   ADD KEY `user_id` (`user_id`);
 
 --
+-- Indexes for table `reset_password`
+--
+ALTER TABLE `reset_password`
+  ADD PRIMARY KEY (`reset_password_id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -120,25 +184,31 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `chat`
 --
 ALTER TABLE `chat`
-  MODIFY `chat_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `chat_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `friend_requests`
 --
 ALTER TABLE `friend_requests`
-  MODIFY `friend_request_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `friend_request_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `posts`
 --
 ALTER TABLE `posts`
-  MODIFY `post_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `post_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
+--
+-- AUTO_INCREMENT for table `reset_password`
+--
+ALTER TABLE `reset_password`
+  MODIFY `reset_password_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Constraints for dumped tables
@@ -163,6 +233,12 @@ ALTER TABLE `friend_requests`
 --
 ALTER TABLE `posts`
   ADD CONSTRAINT `posts_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
+
+--
+-- Constraints for table `reset_password`
+--
+ALTER TABLE `reset_password`
+  ADD CONSTRAINT `reset_password_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

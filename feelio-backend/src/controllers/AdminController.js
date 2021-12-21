@@ -100,7 +100,7 @@ class AdminController{
   }
 
   getAllPost(req, res, next){
-    const { last_post_id } = req.body;
+    const { page_num } = req.body;
 
     function callback(error, results){
       if (error) {
@@ -121,7 +121,78 @@ class AdminController{
       }
     }
 
-    AdminModel.get_all_post({last_post_id, cb: callback });
+    AdminModel.get_all_post({page_num, cb: callback });
+  }
+
+  getAllPostPages(req, res, next){
+    function callback(error, results){
+      if (error) {
+        res.json({
+          header: {
+            error: "1",
+            message: "Request Failed!",
+          },
+        });
+      } 
+      else {
+        res.json(
+          successResponse(
+            { ...results },
+            "Posts pages fetched successfully!"
+          )
+        );
+      }
+    }
+
+    AdminModel.get_all_post_pages({cb: callback });
+  }
+
+  getAllUsers(req, res, next){
+    const { page_num } = req.body;
+
+    function callback(error, results){
+      if (error) {
+        res.json({
+          header: {
+            error: "1",
+            message: "Request Failed!",
+          },
+        });
+      } 
+      else {
+        res.json(
+          successResponse(
+            { ...results },
+            "Users fetched successfully!"
+          )
+        );
+      }
+    }
+
+    AdminModel.get_all_users({page_num, cb: callback });
+  }
+
+  getAllUsersPages(req, res, next){
+    function callback(error, results){
+      if (error) {
+        res.json({
+          header: {
+            error: "1",
+            message: "Request Failed!",
+          },
+        });
+      } 
+      else {
+        res.json(
+          successResponse(
+            { ...results },
+            "Users pages fetched successfully!"
+          )
+        );
+      }
+    }
+
+    AdminModel.get_all_users_pages({cb: callback });
   }
 
   deletePost(req, res, next){
@@ -147,6 +218,31 @@ class AdminController{
     }
 
     AdminModel.deletePost({ post_id, cb: callback });
+  }
+
+  deleteUser(req, res, next){
+    const { post_id } = req.body;
+
+    function callback(error, results){
+      if (error) {
+        res.json({
+          header: {
+            error: "1",
+            message: "Request Failed!",
+          },
+        });
+      } 
+      else {
+        res.json(
+          successResponse(
+            { ...results },
+            "User deleted successfully!"
+          )
+        );
+      }
+    }
+
+    AdminModel.deleteUser({ user_id, cb: callback });
   }
 }
 

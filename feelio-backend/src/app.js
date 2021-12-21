@@ -2,6 +2,7 @@ const { setup } = require("./loaders");
 const express = require("express");
 const { createServer } = require("http");
 const { Server } = require("socket.io");
+const { UserModel } = require("./models/UserModel");
 
 const app = express();
 
@@ -55,6 +56,8 @@ io.on("connection", (socket) => {
     console.log(`connect_error due to ${err.message}`);
   });
 });
+
+//UserModel.resetPassword({email: "a"});
 
 httpServer.listen(process.env.PORT, (err) => {
   if (err) {
