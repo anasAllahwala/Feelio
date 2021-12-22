@@ -6,12 +6,14 @@ const Login = (params) => {
 };
 
 const Register = (params) => {
-  return axiosInstance.post(API.REGISTER, params);
+  return axiosInstance.post(API.REGISTER, params, {
+    "content-type": "multipart/form-data",
+  });
 };
 
 const Profile = (params) => {
   let param = "";
-  if(params){
+  if (params) {
     param = "/" + params.user;
   }
   return axiosInstance.get(API.PROFILE + param, null);

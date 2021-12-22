@@ -14,7 +14,7 @@ class UserModel {
 
   findById({ user_id, cb }) {
     DBService.dbPool.query(
-      "SELECT user_id, name, email, role_name from users LEFT JOIN roles on users.role_id = roles.role_id where user_id = ?",
+      "SELECT user_id, name, email, image_url, role_name from users LEFT JOIN roles on users.role_id = roles.role_id where user_id = ?",
       [user_id],
       (error, results) => {
         cb(error, results[0]);
@@ -25,7 +25,7 @@ class UserModel {
   searchUsers({ name, cb }) {
     if (name.length > 3)
       DBService.dbPool.query(
-        "SELECT user_id, name FROM users WHERE name LIKE ?",
+        "SELECT user_id, name, image_url FROM users WHERE name LIKE ?",
         ["%" + name + "%"],
         (error, results) => {
           cb(error, results);
@@ -46,15 +46,15 @@ class UserModel {
     );
   }
 
-  create({ name, email, password, cb }) {
+  create({ name, email, password, file, cb }) {
     password = hash.create(password);
     DBService.dbPool.query(
       "SELECT `role_id` FROM roles WHERE `role_name`='user'",
       [],
       (error, results) => {
         DBService.dbPool.query(
-          "INSERT INTO users (name, email, password, role_id) VALUES (?, ?, ?, ?)",
-          [name, email, password, results[0].role_id],
+          "INSERT INTO users (name, email, password, image_url, role_id) VALUES (?, ?, ?, ?,?)",
+          [name, email, password, file, results[0].role_id],
           (error, results) => {
             cb(error, results?.insertId);
           }

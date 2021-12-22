@@ -6,7 +6,6 @@ class UserController {
     const { name } = req.query;
 
     function callback(error, results) {
-      console.log(error, results);
       if (error) {
         res.json({
           headers: {

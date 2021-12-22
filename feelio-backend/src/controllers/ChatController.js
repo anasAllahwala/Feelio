@@ -5,7 +5,6 @@ class ChatController {
   getMessages(req, res, next) {
     const { friend_request_id } = req.params;
     function callback(error, results) {
-      console.log(error);
       if (error) {
         res.json({
           headers: {

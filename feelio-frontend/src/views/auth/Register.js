@@ -7,6 +7,7 @@ const Register = ({ title }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [avatar, setAvatar] = useState(null);
 
   let auth = useAuth();
   let location = useLocation();
@@ -24,8 +25,14 @@ const Register = ({ title }) => {
 
   function handleSubmit(ev) {
     ev.preventDefault();
+    let form = new FormData();
 
-    auth.register({ name, email, password }, () => {
+    form.append("name", name);
+    form.append("email", email);
+    form.append("password", password);
+    form.append("avatar", avatar);
+
+    auth.register(form, () => {
       navigate(from, { replace: true });
     });
   }
@@ -39,10 +46,31 @@ const Register = ({ title }) => {
             <dd>Connect with your friends and family!</dd>
           </dl>
           <form className="p-5" onSubmit={handleSubmit}>
+            <div className="flex justify-center mb-5">
+              <label htmlFor="avatar" className=" cursor-pointer">
+                {avatar ? (
+                  <img
+                    src={URL.createObjectURL(avatar)}
+                    alt=""
+                    className="rounded-full h-32 w-32 object-cover"
+                  />
+                ) : (
+                  <div className="rounded-full h-32 w-32 bg-gray-100"></div>
+                )}
+              </label>
+              <input
+                type="file"
+                name="avatar"
+                id="avatar"
+                className="mt-2 flex-1 hidden"
+                onChange={(e) => setAvatar(e.target.files[0])}
+              />
+            </div>
+
             <Input
               id="fullname"
               type="text"
-              name="fullname"
+              name="name"
               label="Full Name"
               className="flex-1"
               onChange={(e) => setName(e.target.value)}
@@ -66,11 +94,7 @@ const Register = ({ title }) => {
               onChange={(e) => setPassword(e.target.value)}
               required
             />
-            <Input
-              label="Profile Picture"
-              type="file"
-              className="mt-2 flex-1"
-            />
+
             <Button className="block ml-auto bg-green-500 text-white mt-2">
               Register
             </Button>

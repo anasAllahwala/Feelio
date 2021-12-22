@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import UsersApi from "../../api/Users";
+import { API } from "../../constants";
 import { useAuth } from "../../hooks";
 
 const Navbar = ({ title, active }) => {
@@ -10,12 +11,16 @@ const Navbar = ({ title, active }) => {
   const [search, setSearch] = useState("");
 
   const ref = useRef(null);
+  const profileRef = useRef(null);
 
   useEffect(() => {}, [usersVisible]);
 
   const handleClickEvent = (e) => {
     if (ref.current && !ref.current.contains(e.target)) {
       setUsersVisibility(false);
+    }
+    if (profileRef.current && !profileRef.current.contains(e.target)) {
+      setVisibility(false);
     }
   };
 
@@ -31,7 +36,7 @@ const Navbar = ({ title, active }) => {
 
   function searchBar() {
     return (
-      <div className="relative w-1/2">
+      <div ref={ref} className="relative w-1/2">
         <div className=" w-full flex rounded-md overflow-hidden">
           <input
             type="search"
@@ -47,17 +52,23 @@ const Navbar = ({ title, active }) => {
           </button>
         </div>
         {usersVisible && (
-          <div
-            ref={ref}
-            className="absolute left-0 bg-white w-full text-black mt-1 overflow-hidden rounded-md shadow-md"
-          >
-            {users.map((user, key) => (
-              <Link key={key} to={"profile/" + user.user_id}>
-                <div className="p-3 border w-full hover:bg-gray-100">
-                  {user.name}
-                </div>
-              </Link>
-            ))}
+          <div className="absolute left-0 bg-white w-full text-black mt-1 overflow-hidden rounded-md shadow-md">
+            {users.length > 0 ? (
+              users.map((user, key) => (
+                <Link key={key} to={"profile/" + user.user_id}>
+                  <div className="flex items-center p-3 border w-full hover:bg-gray-100 cursor-pointer">
+                    <img
+                      src={API.BASE_URL + user.image_url}
+                      alt=""
+                      className="h-10 w-10 object-cover rounded-full mr-3"
+                    />
+                    <p className="font-semibold">{user.name}</p>
+                  </div>
+                </Link>
+              ))
+            ) : (
+              <div className="p-3 border w-full">No results found!</div>
+            )}
           </div>
         )}
       </div>
@@ -69,10 +80,12 @@ const Navbar = ({ title, active }) => {
       .then(({ data }) => {
         if (data.headers.error.toString() === "0") {
           setUsers(Object.values(data.body));
-          setUsersVisibility(true);
         }
       })
-      .catch((e) => console.error(e));
+      .catch((e) => console.error(e))
+      .finally(() => {
+        setUsersVisibility(true);
+      });
   }
 
   return (
@@ -91,7 +104,7 @@ const Navbar = ({ title, active }) => {
               </nav>
             ) : (
               <div className="flex items-center">
-                <div className="relative">
+                <div ref={profileRef} className="relative">
                   <button
                     onClick={() => setVisibility(!visible)}
                     className="flex items-center"
@@ -99,11 +112,15 @@ const Navbar = ({ title, active }) => {
                     <span className="mr-2">{auth.user.name}</span>
                     <img
                       src={
-                        "https://ui-avatars.com/api/?size=30&rounded=true&name=" +
-                        auth.user.name.replace(" ", "+")
+                        auth.user.image_url
+                          ? API.BASE_URL + auth.user.image_url
+                          : "https://ui-avatars.com/api/?rounded=true&size=35&name=" +
+                            auth.user.name.replace(" ", "+")
                       }
                       alt=""
-                      className="mr-2"
+                      width={50}
+                      height={50}
+                      className="h-10 w-10 mr-2 rounded-full shadow-md object-cover"
                     />
                   </button>
                   <div
@@ -116,11 +133,15 @@ const Navbar = ({ title, active }) => {
                       <div className="flex items-center w-full p-3 border-b hover:bg-gray-50">
                         <img
                           src={
-                            "https://ui-avatars.com/api/?rounded=true&size=35&name=" +
-                            auth.user.name.replace(" ", "+")
+                            auth.user.image_url
+                              ? API.BASE_URL + auth.user.image_url
+                              : "https://ui-avatars.com/api/?rounded=true&size=35&name=" +
+                                auth.user.name.replace(" ", "+")
                           }
                           alt=""
-                          className="mr-3"
+                          width="50px"
+                          height="50px"
+                          className="h-10 w-10 mr-3 rounded-full border object-cover shadow-md"
                         />
                         <dl className="flex-1">
                           <dt className="font-semibold">{auth.user.name}</dt>
@@ -164,7 +185,7 @@ const Navbar = ({ title, active }) => {
       <div className="max-w-md lg:max-w-6xl m-auto">
         <div className=" text-gray-600 mt-5">
           {!auth.isLoading && auth.user ? (
-            <div className="flex justify-between w-1/2 mx-auto">
+            <div className="flex justify-evenly w-1/2 mx-auto">
               <Link to="/">
                 <div
                   className={

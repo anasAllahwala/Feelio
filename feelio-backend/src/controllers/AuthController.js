@@ -105,7 +105,7 @@ class AuthController {
       }
     }
 
-    UserModel.create({ ...req.body, cb: callback });
+    UserModel.create({ ...req.body, file: req?.file?.filename, cb: callback });
   }
 
   // :(

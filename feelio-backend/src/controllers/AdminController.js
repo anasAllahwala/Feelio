@@ -91,7 +91,6 @@ class AdminController {
     const { page_num } = req.query;
 
     function callback(error, results) {
-      console.log(error);
       if (error) {
         res.json({
           header: {
@@ -191,7 +190,6 @@ class AdminController {
     const { userId } = req.params;
 
     function callback(error, results) {
-      console.log(error);
       if (error) {
         res.json({
           headers: {
