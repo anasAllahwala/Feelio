@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.1
+-- version 5.0.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 22, 2021 at 06:43 AM
--- Server version: 10.4.20-MariaDB
--- PHP Version: 8.0.9
+-- Generation Time: Dec 22, 2021 at 07:22 AM
+-- Server version: 10.4.11-MariaDB
+-- PHP Version: 7.4.3
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -46,6 +47,27 @@ INSERT INTO `chat` (`chat_id`, `friend_request_id`, `user_id`, `message`, `creat
 (6, 2, 3, 'i m good', '2021-12-22 05:39:06'),
 (7, 2, 5, 'thats amazing', '2021-12-22 05:39:12'),
 (8, 2, 3, 'i know', '2021-12-22 05:39:19');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `comments`
+--
+
+CREATE TABLE `comments` (
+  `comment_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `post_id` int(11) NOT NULL,
+  `comment` text NOT NULL,
+  `comment_date` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `comments`
+--
+
+INSERT INTO `comments` (`comment_id`, `user_id`, `post_id`, `comment`, `comment_date`) VALUES
+(1, 3, 5, 'test', '2021-12-22 06:15:21');
 
 -- --------------------------------------------------------
 
@@ -98,6 +120,26 @@ INSERT INTO `posts` (`post_id`, `body`, `image`, `user_id`, `posted_at`) VALUES
 (13, 'test', NULL, 3, '2021-12-21 16:33:13'),
 (14, 'test1', NULL, 3, '2021-12-21 16:33:13'),
 (16, 'test3', NULL, 3, '2021-12-21 16:33:27');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `reacts`
+--
+
+CREATE TABLE `reacts` (
+  `react_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `post_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `reacts`
+--
+
+INSERT INTO `reacts` (`react_id`, `user_id`, `post_id`) VALUES
+(2, 3, 5),
+(1, 5, 5);
 
 -- --------------------------------------------------------
 
@@ -167,6 +209,14 @@ ALTER TABLE `chat`
   ADD KEY `user_id` (`user_id`);
 
 --
+-- Indexes for table `comments`
+--
+ALTER TABLE `comments`
+  ADD PRIMARY KEY (`comment_id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `post_id` (`post_id`);
+
+--
 -- Indexes for table `friend_requests`
 --
 ALTER TABLE `friend_requests`
@@ -180,6 +230,14 @@ ALTER TABLE `friend_requests`
 ALTER TABLE `posts`
   ADD PRIMARY KEY (`post_id`),
   ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `reacts`
+--
+ALTER TABLE `reacts`
+  ADD PRIMARY KEY (`react_id`),
+  ADD UNIQUE KEY `user_id` (`user_id`,`post_id`),
+  ADD KEY `post_id` (`post_id`);
 
 --
 -- Indexes for table `reset_password`
@@ -199,7 +257,8 @@ ALTER TABLE `roles`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`user_id`),
-  ADD UNIQUE KEY `email` (`email`);
+  ADD UNIQUE KEY `email` (`email`),
+  ADD KEY `role_id` (`role_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -212,6 +271,12 @@ ALTER TABLE `chat`
   MODIFY `chat_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
+-- AUTO_INCREMENT for table `comments`
+--
+ALTER TABLE `comments`
+  MODIFY `comment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `friend_requests`
 --
 ALTER TABLE `friend_requests`
@@ -222,6 +287,12 @@ ALTER TABLE `friend_requests`
 --
 ALTER TABLE `posts`
   MODIFY `post_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
+--
+-- AUTO_INCREMENT for table `reacts`
+--
+ALTER TABLE `reacts`
+  MODIFY `react_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `reset_password`
@@ -239,7 +310,7 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- Constraints for dumped tables
@@ -251,6 +322,13 @@ ALTER TABLE `users`
 ALTER TABLE `chat`
   ADD CONSTRAINT `chat_ibfk_1` FOREIGN KEY (`friend_request_id`) REFERENCES `friend_requests` (`friend_request_id`) ON DELETE CASCADE,
   ADD CONSTRAINT `chat_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `comments`
+--
+ALTER TABLE `comments`
+  ADD CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`),
+  ADD CONSTRAINT `comments_ibfk_2` FOREIGN KEY (`post_id`) REFERENCES `posts` (`post_id`);
 
 --
 -- Constraints for table `friend_requests`
@@ -266,10 +344,23 @@ ALTER TABLE `posts`
   ADD CONSTRAINT `posts_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE;
 
 --
+-- Constraints for table `reacts`
+--
+ALTER TABLE `reacts`
+  ADD CONSTRAINT `reacts_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`),
+  ADD CONSTRAINT `reacts_ibfk_2` FOREIGN KEY (`post_id`) REFERENCES `posts` (`post_id`);
+
+--
 -- Constraints for table `reset_password`
 --
 ALTER TABLE `reset_password`
   ADD CONSTRAINT `reset_password_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
+
+--
+-- Constraints for table `users`
+--
+ALTER TABLE `users`
+  ADD CONSTRAINT `users_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `roles` (`role_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

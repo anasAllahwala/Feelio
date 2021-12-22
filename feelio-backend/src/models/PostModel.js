@@ -71,6 +71,46 @@ class PostModel {
     );
   }
 
+  addComment({ user_id, post_id, comment, cb }) {
+    DBService.dbPool.query(
+      "INSERT INTO comments (user_id, post_id, comment) VALUES (?, ?, ?)",
+      [user_id, post_id, comment],
+      (error, results) => {
+        cb(error, results.insertId);
+      }
+    );
+  }
+
+  addReact({ user_id, post_id, cb }) {
+    DBService.dbPool.query(
+      "INSERT INTO reacts (user_id, post_id) VALUES (?, ?)",
+      [user_id, post_id],
+      (error, results) => {
+        cb(error, results.insertId);
+      }
+    );
+  }
+
+  getPostComments({ post_id, cb }) {
+    DBService.dbPool.query(
+      "SELECT users.name AS user_name, comment, comment_date FROM comments LEFT JOIN users on comments.user_id = users.user_id WHERE post_id = ? ORDER BY comment_date DESC",
+      [post_id],
+      (error, results) => {
+        cb(error, results.insertId);
+      }
+    );
+  }
+
+  getPostReacts({ post_id, cb }) {
+    DBService.dbPool.query(
+      "SELECT COUNT(*) AS likes FROM reacts WHERE post_id = ?",
+      [post_id],
+      (error, results) => {
+        cb(error, results.insertId);
+      }
+    );
+  }
+
   edit({ user_id, body, image, post_id, cb }) {
     DBService.dbPool.query(
       "UPDATE posts SET body = ?, image = ? WHERE post_id = ? AND user_id = ?",
