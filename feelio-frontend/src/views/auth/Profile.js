@@ -12,7 +12,7 @@ const Profile = ({ title }) => {
   let params = useParams();
   const { user } = useAuth();
   const [posts, setPosts] = useState([]);
-  const [isFriend, setIsFriend] = useState(false);
+  const [isFriend, setIsFriend] = useState(true);
   const [currUser, setCurrUser] = useState(null);
   const [friends, setFriends] = useState([]);
 
@@ -57,9 +57,8 @@ const Profile = ({ title }) => {
     if (user && currUser) {
       if (currUser.user_id !== user.user_id) {
         let check = friends.some((friend) => {
-          return friend.user_id === user.user_id;
+          return friend.friend_id === user.user_id;
         });
-
         setIsFriend(check);
       }
     }
@@ -68,7 +67,6 @@ const Profile = ({ title }) => {
   function sendFriendRequest(user_id) {
     FriendsApi.sendFriendRequest({ friend_id: user_id })
       .then(({ data }) => {
-        console.log(data);
         if (data.headers.error.toString() === "0") {
           alert(data.headers.message);
         }

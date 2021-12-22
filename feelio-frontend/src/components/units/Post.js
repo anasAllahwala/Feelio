@@ -42,7 +42,7 @@ const Post = ({ post, refresh }) => {
   }
 
   return (
-    <div className="shadow-md">
+    <div className="shadow-md my-5">
       <div className="flex justify-between  p-5">
         <div>
           <Link to={"/profile/" + user_id}>
