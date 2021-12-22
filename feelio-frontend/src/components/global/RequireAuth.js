@@ -9,7 +9,6 @@ const RequireAuth = ({ children }) => {
 
   useEffect(() => {
     if (!auth.user && !auth.isLoading) {
-      // console.log(auth);
       navigate("/login", { state: { from: location } });
     }
   }, [auth, location, navigate]);

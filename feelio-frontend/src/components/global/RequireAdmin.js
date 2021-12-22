@@ -4,16 +4,18 @@ import { Outlet } from "react-router-dom";
 
 import { useAuth } from "../../hooks";
 
-const RequireAdmin = ({ children }) => {
+const RequireAdmin = ({ active }) => {
   let auth = useAuth();
   let location = useLocation();
   let navigate = useNavigate();
 
   useEffect(() => {
+    active("admin-panel");
+
     if (!auth?.user?.role_name === "admin" && !auth.isLoading) {
       navigate("/", { state: { from: location } });
     }
-  }, [auth, location, navigate]);
+  }, [auth, location, navigate, active]);
 
   if (!auth.isLoading && auth.user) return <Outlet />;
 

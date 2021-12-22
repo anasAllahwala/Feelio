@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Auth, FriendsApi, PostsApi } from "../../api";
-import { Button, Post } from "../../components";
+import { Post } from "../../components";
 import { useAuth } from "../../hooks";
 
-const Profile = ({ title }) => {
+const Profile = ({ title, active }) => {
   useEffect(() => {
     title("Profile");
-  }, [title]);
+    active("");
+  }, [title, active]);
 
   let params = useParams();
   const { user } = useAuth();
@@ -60,9 +61,10 @@ const Profile = ({ title }) => {
           return friend.friend_id === user.user_id;
         });
         setIsFriend(check);
+        console.log(friends);
       }
     }
-  }, [friends]);
+  }, [friends, user, currUser]);
 
   function sendFriendRequest(user_id) {
     FriendsApi.sendFriendRequest({ friend_id: user_id })

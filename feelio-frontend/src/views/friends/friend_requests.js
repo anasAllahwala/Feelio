@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { FriendsApi } from "../../api";
 import { Button } from "../../components/units";
+import { useAuth } from "../../hooks";
 
-const FriendRequests = ({ title }) => {
+const FriendRequests = ({ title, active }) => {
   const [friendRequests, setFriendRequests] = useState([]);
-
+  const auth = useAuth();
   useEffect(() => {
     title("Friend Requests");
 
+    active("friend-requests");
+
     fetchFriendRequests();
-  }, [title]);
+  }, [title, active]);
 
   function fetchFriendRequests() {
     FriendsApi.fetchPendingRequests()
@@ -24,7 +27,10 @@ const FriendRequests = ({ title }) => {
   function acceptFriendRequest(data) {
     FriendsApi.acceptFriendRequest(data)
       .then(({ data }) => {
-        if (data.headers.error.toString() === "0") alert(data.headers.message);
+        if (data.headers.error.toString() === "0") {
+          auth.refresh();
+          alert(data.headers.message);
+        }
       })
       .catch((e) => console.error(e))
       .finally(() => {

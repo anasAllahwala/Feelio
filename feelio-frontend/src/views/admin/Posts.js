@@ -1,16 +1,40 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { AdminApi } from "../../api";
 import { useApi } from "../../hooks";
 
 const AdminPosts = ({ title }) => {
+  const [lastPage, setLastPage] = useState(null);
+
   useEffect(() => {
     title("All Posts");
   }, [title]);
+
   const {
     result: posts,
     loading,
     refresh,
-  } = useApi(AdminApi.fetchPosts, null, []);
+  } = useApi(AdminApi.fetchPosts, lastPage);
+
+  function openPage(num) {
+    setLastPage(num);
+  }
+
+  function pagination() {
+    return (
+      <div className="flex mt-5 justify-center">
+        {Array.from(Array(posts.pages).keys()).map((page, key) => (
+          <button
+            onClick={() => openPage(key + 1)}
+            key={key}
+            className="w-10 h-10 border flex items-center justify-center"
+          >
+            {key + 1}
+          </button>
+        ))}
+      </div>
+    );
+  }
+
   function table() {
     return (
       <div className="flex flex-col">
@@ -38,26 +62,29 @@ const AdminPosts = ({ title }) => {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {posts.map((post, key) => (
-                    <tr key={key}>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm font-medium text-gray-900">
-                          {post.name}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">{post.body}</div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <button
-                          onClick={() => deletePost(post)}
-                          className="text-indigo-600 hover:text-indigo-900"
-                        >
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
+                  {!loading &&
+                    Object.values(posts.data).map((post, key) => (
+                      <tr key={key}>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm font-medium text-gray-900">
+                            {post.name}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">
+                            {post.body}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                          <button
+                            onClick={() => deletePost(post)}
+                            className="text-indigo-600 hover:text-indigo-900"
+                          >
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
                 </tbody>
               </table>
             </div>
@@ -76,7 +103,12 @@ const AdminPosts = ({ title }) => {
       })
       .catch((e) => console.error(e));
   }
-  return <div>{table()}</div>;
+  return (
+    <div>
+      {table()}
+      {!loading && pagination()}
+    </div>
+  );
 };
 
 export default AdminPosts;

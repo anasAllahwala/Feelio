@@ -24,13 +24,13 @@ const AdminUsers = ({ title }) => {
     return (
       <div className="flex mt-5 justify-center">
         {Array.from(Array(users.pages).keys()).map((page, key) => (
-          <div
+          <button
             onClick={() => openPage(key + 1)}
             key={key}
             className=" w-10 h-10 border flex items-center justify-center"
           >
             {key + 1}
-          </div>
+          </button>
         ))}
       </div>
     );

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import {
   FriendRequests,
@@ -12,28 +12,13 @@ import {
 } from "./views";
 import { Navbar, RequireAuth, RequireAdmin, Chat } from "./components";
 import { useAuth } from "./hooks";
-import { FriendsApi } from "./api";
 
 function App() {
   const [title, setTitle] = useState("Feelio");
-  const { user, isLoading } = useAuth();
+  const { user, isLoading, friends } = useAuth();
   const [chats, setChats] = useState([]);
   const [chatVisible, setChatVisibility] = useState(false);
-  const [friends, setFriends] = useState([]);
-
-  useEffect(() => {
-    if (user) {
-      FriendsApi.fetchFriends()
-        .then(({ data }) => {
-          if (data.headers.error.toString() === "0") {
-            setFriends(Object.values(data.body));
-          }
-        })
-        .catch((e) => console.error(e));
-    }
-  }, [user]);
-
-  // const { result: friends } = useApi(FriendsApi.fetchFriends, null, []);
+  const [active, setActive] = useState("home");
 
   function closeChat(chatId) {
     let currentChats = [...chats];
@@ -104,51 +89,56 @@ function App() {
   }
 
   return (
-    <div className="max-w-md lg:max-w-6xl m-auto py-5">
-      <Navbar title={title} />
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <RequireAuth>
-              <Home title={setTitle} />
-            </RequireAuth>
-          }
-        ></Route>
-        <Route
-          path="/profile"
-          element={
-            <RequireAuth>
-              <Profile title={setTitle} />
-            </RequireAuth>
-          }
-        ></Route>
-        <Route
-          path="/profile/:diff_user"
-          element={
-            <RequireAuth>
-              <Profile title={setTitle} />
-            </RequireAuth>
-          }
-        ></Route>
-        <Route
-          path="/friends"
-          element={
-            <RequireAuth>
-              <FriendRequests title={setTitle} />
-            </RequireAuth>
-          }
-        ></Route>
-        <Route path="/admin-panel" element={<RequireAdmin />}>
-          <Route index element={<AdminUsers title={setTitle} />} />
-          <Route path="posts" element={<AdminPosts title={setTitle} />} />
-        </Route>
+    <div>
+      <Navbar title={title} active={active} />
+      <div className="max-w-md lg:max-w-6xl m-auto py-5">
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <RequireAuth>
+                <Home title={setTitle} active={setActive} />
+              </RequireAuth>
+            }
+          ></Route>
+          <Route
+            path="/profile"
+            element={
+              <RequireAuth>
+                <Profile title={setTitle} active={setActive} />
+              </RequireAuth>
+            }
+          ></Route>
+          <Route
+            path="/profile/:diff_user"
+            element={
+              <RequireAuth>
+                <Profile title={setTitle} active={setActive} />
+              </RequireAuth>
+            }
+          ></Route>
+          <Route
+            path="/friends"
+            element={
+              <RequireAuth>
+                <FriendRequests title={setTitle} active={setActive} />
+              </RequireAuth>
+            }
+          ></Route>
+          <Route
+            path="/admin-panel"
+            element={<RequireAdmin active={setActive} />}
+          >
+            <Route index element={<AdminUsers title={setTitle} />} />
+            <Route path="posts" element={<AdminPosts title={setTitle} />} />
+          </Route>
 
-        <Route path="/register" element={<Register title={setTitle} />} />
-        <Route path="/login" element={<Login title={setTitle} />} />
-      </Routes>
+          <Route path="/register" element={<Register title={setTitle} />} />
+          <Route path="/login" element={<Login title={setTitle} />} />
+        </Routes>
 
-      {user && !isLoading && friendsContainer()}
+        {user && !isLoading && friendsContainer()}
+      </div>
     </div>
   );
 }

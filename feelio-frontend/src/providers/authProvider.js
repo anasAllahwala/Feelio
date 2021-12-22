@@ -1,10 +1,16 @@
-import React, { useEffect, useMemo, useReducer, useState } from "react";
-import { Auth } from "../api";
-
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useReducer,
+  useState,
+} from "react";
+import { Auth, FriendsApi } from "../api";
 import { AuthContext } from "../contexts";
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [friends, setFriends] = useState([]);
 
   const [state, dispatch] = useReducer(
     (prevState, action) => {
@@ -83,10 +89,22 @@ const AuthProvider = ({ children }) => {
       });
   }
 
+  const fetchFriends = useCallback(() => {
+    FriendsApi.fetchFriends()
+      .then(({ data }) => {
+        if (data.headers.error.toString() === "0") {
+          setFriends(Object.values(data.body));
+        }
+      })
+      .catch((e) => console.error(e));
+  }, []);
+
   const authContext = useMemo(
     () => ({
       token: state.userToken,
       isLoading: state.isLoading,
+      friends,
+      refresh: fetchFriends,
       user,
       signin: async (data) => {
         let token = null;
@@ -128,12 +146,14 @@ const AuthProvider = ({ children }) => {
           .catch((e) => console.error(e));
       },
     }),
-    [state, user]
+    [state, user, friends, fetchFriends]
   );
 
   useEffect(() => {
-    // console.log(state, authContext);
-  }, [state]);
+    if (authContext.user) {
+      fetchFriends();
+    }
+  }, [authContext.user, fetchFriends]);
 
   return (
     <AuthContext.Provider value={authContext}>{children}</AuthContext.Provider>

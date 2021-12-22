@@ -1,18 +1,177 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import UsersApi from "../../api/Users";
 import { useAuth } from "../../hooks";
 
-const Navbar = ({ title }) => {
+const Navbar = ({ title, active }) => {
+  const [visible, setVisibility] = useState(false);
+  const [usersVisible, setUsersVisibility] = useState(false);
+  const [users, setUsers] = useState([]);
+  const [search, setSearch] = useState("");
+
+  const ref = useRef(null);
+
+  useEffect(() => {}, [usersVisible]);
+
+  const handleClickEvent = (e) => {
+    if (ref.current && !ref.current.contains(e.target)) {
+      setUsersVisibility(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("click", handleClickEvent, true);
+
+    return () => {
+      document.removeEventListener("click", handleClickEvent, true);
+    };
+  }, []);
+
   let auth = useAuth();
+
+  function searchBar() {
+    return (
+      <div className="relative w-1/2">
+        <div className=" w-full flex rounded-md overflow-hidden">
+          <input
+            type="search"
+            value={search}
+            className="flex-1 border-0 text-black"
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          <button
+            className="bg-gray-100 text-black px-2 border-0"
+            onClick={() => filterUsers()}
+          >
+            Search
+          </button>
+        </div>
+        {usersVisible && (
+          <div
+            ref={ref}
+            className="absolute left-0 bg-white w-full text-black mt-1 overflow-hidden rounded-md shadow-md"
+          >
+            {users.map((user, key) => (
+              <Link key={key} to={"profile/" + user.user_id}>
+                <div className="p-3 border w-full hover:bg-gray-100">
+                  {user.name}
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  function filterUsers() {
+    UsersApi.fetchUsers({ name: search })
+      .then(({ data }) => {
+        if (data.headers.error.toString() === "0") {
+          setUsers(Object.values(data.body));
+          setUsersVisibility(true);
+        }
+      })
+      .catch((e) => console.error(e));
+  }
 
   return (
     <div>
-      <div className="flex justify-between items-center">
-        <div className="flex-1">
+      <div className="bg-blue-600 text-white ">
+        <div className=" max-w-md lg:max-w-6xl m-auto py-5">
+          <div className="flex justify-between items-center">
+            <h1 className="font-semibold text-2xl">Feelio</h1>
+            {searchBar()}
+            {!(auth.user && !auth.isLoading) ? (
+              <nav>
+                <Link className="mr-2" to="/login">
+                  Login
+                </Link>
+                <Link to="/register">Register</Link>
+              </nav>
+            ) : (
+              <div className="flex items-center">
+                <div className="relative">
+                  <button
+                    onClick={() => setVisibility(!visible)}
+                    className="flex items-center"
+                  >
+                    <span className="mr-2">{auth.user.name}</span>
+                    <img
+                      src={
+                        "https://ui-avatars.com/api/?size=30&rounded=true&name=" +
+                        auth.user.name.replace(" ", "+")
+                      }
+                      alt=""
+                      className="mr-2"
+                    />
+                  </button>
+                  <div
+                    className={
+                      "absolute w-72 bg-white mt-3 right-0 shadow-md overflow-hidden rounded-md transition-all duration-150 max-h-0 text-gray-600" +
+                      (visible ? " max-h-36 border" : "")
+                    }
+                  >
+                    <Link to="/profile">
+                      <div className="flex items-center w-full p-3 border-b hover:bg-gray-50">
+                        <img
+                          src={
+                            "https://ui-avatars.com/api/?rounded=true&size=35&name=" +
+                            auth.user.name.replace(" ", "+")
+                          }
+                          alt=""
+                          className="mr-3"
+                        />
+                        <dl className="flex-1">
+                          <dt className="font-semibold">{auth.user.name}</dt>
+                          <dd>{auth.user.email}</dd>
+                        </dl>
+                      </div>
+                    </Link>
+
+                    <button
+                      className="w-full p-3 text-left hover:bg-gray-50"
+                      onClick={auth.signOut}
+                    >
+                      <div className="flex items-center">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="35"
+                          height="30"
+                          fill="currentColor"
+                          className="bi bi-box-arrow-right mr-3"
+                          viewBox="0 0 16 16"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"
+                          />
+                          <path
+                            fillRule="evenodd"
+                            d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"
+                          />
+                        </svg>
+                        Logout
+                      </div>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+      <div className="max-w-md lg:max-w-6xl m-auto">
+        <div className=" text-gray-600 mt-5">
           {!auth.isLoading && auth.user ? (
-            <div className="flex justify-center">
+            <div className="flex justify-between w-1/2 mx-auto">
               <Link to="/">
-                <div className="flex items-center mx-2">
+                <div
+                  className={
+                    "flex items-center mx-2 font-semibold" +
+                    (active === "home" ? " text-blue-500" : "")
+                  }
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="22"
@@ -27,7 +186,12 @@ const Navbar = ({ title }) => {
                 </div>
               </Link>
               <Link to="/friends">
-                <div className="flex items-center mx-2">
+                <div
+                  className={
+                    "flex items-center mx-2 font-semibold" +
+                    (active === "friend-requests" ? " text-blue-500" : "")
+                  }
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="22"
@@ -48,11 +212,16 @@ const Navbar = ({ title }) => {
               </Link>
               {auth.user.role_name === "admin" && (
                 <Link to="/admin-panel">
-                  <div className="flex items-center mx-2">
+                  <div
+                    className={
+                      "flex items-center mx-2 font-semibold" +
+                      (active === "admin-panel" ? " text-green-500" : "")
+                    }
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
+                      width="22"
+                      height="22"
                       fill="currentColor"
                       className="bi bi-shield-lock-fill mr-2"
                       viewBox="0 0 16 16"
@@ -69,55 +238,7 @@ const Navbar = ({ title }) => {
             </div>
           ) : null}
         </div>
-
-        {!auth.user && !auth.isLoading ? (
-          <nav>
-            <Link className="mr-2" to="/login">
-              Login
-            </Link>
-            <Link to="/register">Register</Link>
-          </nav>
-        ) : (
-          <div className="flex items-center">
-            <Link to="/profile">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                fill="currentColor"
-                className="mx-2 bi bi-person-circle"
-                viewBox="0 0 16 16"
-              >
-                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
-                <path
-                  fillRule="evenodd"
-                  d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"
-                />
-              </svg>
-            </Link>
-            <button onClick={() => auth.signOut()}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                fill="currentColor"
-                className="bi bi-box-arrow-right"
-                viewBox="0 0 16 16"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"
-                />
-                <path
-                  fillRule="evenodd"
-                  d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"
-                />
-              </svg>
-            </button>
-          </div>
-        )}
       </div>
-      <h1 className="text-xl font-semibold my-5">{title}</h1>
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { PostsApi } from "../../api";
-import { Button, Input } from "../../components";
+import { Button } from "../../components";
 
 const CreatePost = ({ refresh }) => {
   const [post, setPost] = useState("");
@@ -20,12 +20,12 @@ const CreatePost = ({ refresh }) => {
   return (
     <div>
       <form onSubmit={handleSubmit}>
-        <div className="flex">
-          <Input
-            parentClass="flex-1"
-            className="w-full h-full"
+        <div className="flex overflow-hidden rounded-md focus-within:shadow-lg">
+          <input
+            className="rounded-l-md rounded-r-none flex-1"
             type="text"
             name="post"
+            autoComplete="off"
             value={post}
             onChange={(e) => setPost(e.target.value)}
           />

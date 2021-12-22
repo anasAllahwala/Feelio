@@ -8,7 +8,9 @@ const fetchUsers = (params) => {
 };
 
 const fetchPosts = (params) => {
-  return axiosInstance.get(API.ADMIN_POSTS, params);
+  return axiosInstance.get(API.ADMIN_POSTS, {
+    params: { page_num: params },
+  });
 };
 
 const deleteUser = (params) => {
