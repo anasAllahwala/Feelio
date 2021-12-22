@@ -5,13 +5,17 @@ const fetchFriends = () => {
   return axiosInstance.get(API.FRIENDS);
 };
 
+const fetchPendingRequestById = (params) => {
+  return axiosInstance.get(API.FRIENDS + "/" + params.req);
+};
+
 const fetchPendingRequests = () => {
   return axiosInstance.get(API.FRIEND_REQUESTS);
 };
 
 const fetchFriendsByUser = (params) => {
-  return axiosInstance.get(API.FRIENDS + "/" +params.user);
-}
+  return axiosInstance.get(API.FRIENDS + "/" + params.user);
+};
 
 const acceptFriendRequest = (data) => {
   return axiosInstance.patch(API.ACCEPT_FRIEND_REQUEST, data);
@@ -32,6 +36,7 @@ const FriendsApi = {
   rejectFriendRequest,
   sendFriendRequest,
   fetchFriends,
+  fetchPendingRequestById,
 };
 
 export default FriendsApi;

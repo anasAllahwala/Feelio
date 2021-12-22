@@ -5,6 +5,7 @@ class ChatController {
   getMessages(req, res, next) {
     const { friend_request_id } = req.params;
     function callback(error, results) {
+      console.log(error);
       if (error) {
         res.json({
           headers: {
@@ -32,12 +33,12 @@ class ChatController {
         res.json({
           headers: {
             error: "1",
-            message: "Failed to create Post!",
+            message: "Failed to send message!",
           },
         });
       } else {
         res.json(
-          successResponse({ ...results }, "Message inserted successfully!")
+          successResponse({ ...results[0] }, "Message inserted successfully!")
         );
       }
     }

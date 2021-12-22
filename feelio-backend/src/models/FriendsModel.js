@@ -11,6 +11,16 @@ class FriendsModel {
     );
   }
 
+  findPendingById({ req_id, cb }) {
+    DBService.dbPool.query(
+      "SELECT friend_request_id, sender_id, users.name as sender_name, friend_request_date FROM friend_requests INNER JOIN users ON friend_requests.sender_id = users.user_id WHERE status = 'Pending' AND friend_request_id = ? ORDER BY friend_request_date DESC",
+      [req_id],
+      (error, results) => {
+        cb(error, results);
+      }
+    );
+  }
+
   findAcceptedByUser({ user_id, cb }) {
     DBService.dbPool.query(
       "SELECT friend_request_id, IF(sender_id = ?, receiver_id, sender_id) as friend_id, users.name as friend_name, friend_request_date FROM friend_requests INNER JOIN users ON IF(sender_id = ?, receiver_id, sender_id) = users.user_id WHERE status = 'Accepted' AND (sender_id = ? OR receiver_id = ?) ORDER BY friend_request_date DESC",
@@ -58,7 +68,7 @@ class FriendsModel {
         "INSERT INTO friend_requests (sender_id, receiver_id) VALUES (?, ?)",
         [user_id, friend_id],
         (error, results) => {
-          cb(error, results.insertId);
+          cb(error, results);
         }
       );
     } else {

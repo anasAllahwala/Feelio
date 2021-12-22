@@ -1,3 +1,4 @@
+import { AdminPosts, AdminUsers } from "./admin";
 import { Login, Profile, Register } from "./auth";
 import { Chats, Chat } from "./chat";
 import { FriendRequests } from "./friends";
@@ -13,4 +14,6 @@ export {
   FriendRequests,
   Chats,
   Chat,
+  AdminPosts,
+  AdminUsers,
 };

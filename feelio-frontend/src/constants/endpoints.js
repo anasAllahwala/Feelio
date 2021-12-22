@@ -20,6 +20,13 @@ const REJECT_FRIEND_REQUEST = "friends/requests/reject";
 const MESSAGES = "chats/";
 const SEND_MESSAGE = "/new";
 
+// Admin Endpoints
+const ADMIN_USERS = "admin/users";
+const ADMIN_POSTS = "admin/posts";
+
+// Global Endpoints
+const ALL_USERS = "/users";
+
 const API = {
   LOGIN,
   REGISTER,
@@ -27,12 +34,15 @@ const API = {
   POSTS,
   USER_POSTS,
   FRIENDS,
+  ALL_USERS,
   BASE_URL,
   FRIEND_REQUESTS,
   ACCEPT_FRIEND_REQUEST,
   REJECT_FRIEND_REQUEST,
   MESSAGES,
   SEND_MESSAGE,
+  ADMIN_USERS,
+  ADMIN_POSTS,
 };
 
 export default API;

@@ -6,6 +6,9 @@ var friendsRouter = express.Router();
 /* Get Friend Requests */
 friendsRouter.get("/requests", auth, FriendController.get);
 
+/* Get Friend Request By Id*/
+friendsRouter.get("/requests/:req_id", auth, FriendController.get);
+
 /* Send Friend Request */
 friendsRouter.post("/requests", auth, FriendController.create);
 

@@ -2,13 +2,12 @@ const { hash } = require("../helpers/hash");
 const { DBService } = require("../services/DBService");
 
 class UserModel {
-
-  findRoleById({user_id, cb}){
+  findRoleById({ user_id, cb }) {
     DBService.dbPool.query(
-      "SELECT role_id, role_name from users LEFT JOIN roles on users.role_id = roles.role_id where user_id = ?",
+      "SELECT users.role_id, role_name from users LEFT JOIN roles on users.role_id = roles.role_id where user_id = ?",
       [user_id],
       (error, results) => {
-        cb(error, results[0]);
+        cb(error, results);
       }
     );
   }
@@ -21,6 +20,20 @@ class UserModel {
         cb(error, results[0]);
       }
     );
+  }
+
+  searchUsers({ name, cb }) {
+    if (name.length > 3)
+      DBService.dbPool.query(
+        "SELECT user_id, name FROM users WHERE name LIKE ?",
+        ["%" + name + "%"],
+        (error, results) => {
+          cb(error, results);
+        }
+      );
+    else {
+      cb(1, null);
+    }
   }
 
   findByEmail({ email, cb }) {
@@ -50,7 +63,7 @@ class UserModel {
     );
   }
 
-  changePassword({user_id, password, cb }) {
+  changePassword({ user_id, password, cb }) {
     password = hash.create(password);
     DBService.dbPool.query(
       "UPDATE users SET password = ? WHERE user_id = ?",

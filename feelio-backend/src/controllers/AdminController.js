@@ -1,11 +1,9 @@
 const { AdminModel } = require("../models/AdminModel");
 const { successResponse } = require("../utils/responses");
 
-class AdminController{
-  
-  getTotalUsers(req, res, next){
-
-    function callback(error, results){
+class AdminController {
+  getTotalUsers(req, res, next) {
+    function callback(error, results) {
       if (error) {
         res.json({
           header: {
@@ -13,13 +11,9 @@ class AdminController{
             message: "Request Failed!",
           },
         });
-      } 
-      else {
+      } else {
         res.json(
-          successResponse(
-            { ...results },
-            "Total users fetched successfully!"
-          )
+          successResponse({ ...results }, "Total users fetched successfully!")
         );
       }
     }
@@ -27,9 +21,8 @@ class AdminController{
     AdminModel.get_total_users({ cb: callback });
   }
 
-  getTotalNewUsersToday(req, res, next){
-
-    function callback(error, results){
+  getTotalNewUsersToday(req, res, next) {
+    function callback(error, results) {
       if (error) {
         res.json({
           header: {
@@ -37,8 +30,7 @@ class AdminController{
             message: "Request Failed!",
           },
         });
-      } 
-      else {
+      } else {
         res.json(
           successResponse(
             { ...results },
@@ -51,9 +43,8 @@ class AdminController{
     AdminModel.get_total_new_users_today({ cb: callback });
   }
 
-  getTotalMessagesSendToday(req, res, next){
-
-    function callback(error, results){
+  getTotalMessagesSendToday(req, res, next) {
+    function callback(error, results) {
       if (error) {
         res.json({
           header: {
@@ -61,8 +52,7 @@ class AdminController{
             message: "Request Failed!",
           },
         });
-      } 
-      else {
+      } else {
         res.json(
           successResponse(
             { ...results },
@@ -75,9 +65,8 @@ class AdminController{
     AdminModel.get_total_messages_send_today({ cb: callback });
   }
 
-  getTotalPostToday(req, res, next){
-
-    function callback(error, results){
+  getTotalPostToday(req, res, next) {
+    function callback(error, results) {
       if (error) {
         res.json({
           header: {
@@ -85,8 +74,7 @@ class AdminController{
             message: "Request Failed!",
           },
         });
-      } 
-      else {
+      } else {
         res.json(
           successResponse(
             { ...results },
@@ -99,10 +87,11 @@ class AdminController{
     AdminModel.get_total_post_today({ cb: callback });
   }
 
-  getAllPost(req, res, next){
+  getAllPost(req, res, next) {
     const { page_num } = req.body;
 
-    function callback(error, results){
+    function callback(error, results) {
+      console.log(error);
       if (error) {
         res.json({
           header: {
@@ -110,22 +99,18 @@ class AdminController{
             message: "Request Failed!",
           },
         });
-      } 
-      else {
+      } else {
         res.json(
-          successResponse(
-            { ...results },
-            "Posts fetched successfully!"
-          )
+          successResponse({ ...results }, "Posts fetched successfully!")
         );
       }
     }
 
-    AdminModel.get_all_post({page_num, cb: callback });
+    AdminModel.get_all_posts({ page_num, cb: callback });
   }
 
-  getAllPostPages(req, res, next){
-    function callback(error, results){
+  getAllPostPages(req, res, next) {
+    function callback(error, results) {
       if (error) {
         res.json({
           header: {
@@ -133,24 +118,20 @@ class AdminController{
             message: "Request Failed!",
           },
         });
-      } 
-      else {
+      } else {
         res.json(
-          successResponse(
-            { ...results },
-            "Posts pages fetched successfully!"
-          )
+          successResponse({ ...results }, "Posts pages fetched successfully!")
         );
       }
     }
 
-    AdminModel.get_all_post_pages({cb: callback });
+    AdminModel.get_all_post_pages({ cb: callback });
   }
 
-  getAllUsers(req, res, next){
+  getAllUsers(req, res, next) {
     const { page_num } = req.body;
 
-    function callback(error, results){
+    function callback(error, results) {
       if (error) {
         res.json({
           header: {
@@ -158,22 +139,18 @@ class AdminController{
             message: "Request Failed!",
           },
         });
-      } 
-      else {
+      } else {
         res.json(
-          successResponse(
-            { ...results },
-            "Users fetched successfully!"
-          )
+          successResponse({ ...results }, "Users fetched successfully!")
         );
       }
     }
 
-    AdminModel.get_all_users({page_num, cb: callback });
+    AdminModel.get_all_users({ page_num, cb: callback });
   }
 
-  getAllUsersPages(req, res, next){
-    function callback(error, results){
+  getAllUsersPages(req, res, next) {
+    function callback(error, results) {
       if (error) {
         res.json({
           header: {
@@ -181,68 +158,53 @@ class AdminController{
             message: "Request Failed!",
           },
         });
-      } 
-      else {
+      } else {
         res.json(
-          successResponse(
-            { ...results },
-            "Users pages fetched successfully!"
-          )
+          successResponse({ ...results }, "Users pages fetched successfully!")
         );
       }
     }
 
-    AdminModel.get_all_users_pages({cb: callback });
+    AdminModel.get_all_users_pages({ cb: callback });
   }
 
-  deletePost(req, res, next){
-    const { post_id } = req.body;
+  deletePost(req, res, next) {
+    const { postId } = req.params;
 
-    function callback(error, results){
+    function callback(error, results) {
       if (error) {
         res.json({
-          header: {
+          headers: {
             error: "1",
             message: "Request Failed!",
           },
         });
-      } 
-      else {
-        res.json(
-          successResponse(
-            { ...results },
-            "Post deleted successfully!"
-          )
-        );
+      } else {
+        res.json(successResponse({ ...results }, "Post deleted successfully!"));
       }
     }
 
-    AdminModel.deletePost({ post_id, cb: callback });
+    AdminModel.deletePost({ post_id: postId, cb: callback });
   }
 
-  deleteUser(req, res, next){
-    const { post_id } = req.body;
+  deleteUser(req, res, next) {
+    const { userId } = req.params;
 
-    function callback(error, results){
+    function callback(error, results) {
+      console.log(error);
       if (error) {
         res.json({
-          header: {
+          headers: {
             error: "1",
             message: "Request Failed!",
           },
         });
-      } 
-      else {
-        res.json(
-          successResponse(
-            { ...results },
-            "User deleted successfully!"
-          )
-        );
+      } else {
+        res.json(successResponse(null, "User deleted successfully!"));
       }
     }
 
-    AdminModel.deleteUser({ user_id, cb: callback });
+    AdminModel.deleteUser({ user_id: userId, cb: callback });
   }
 }
 

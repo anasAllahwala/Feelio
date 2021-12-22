@@ -19,13 +19,30 @@ class FriendController {
     FriendsModel.findPendingByUser({ user_id, cb: callback });
   }
 
+  findRequestById(req, res, next) {
+    const { req_id } = req.params;
+    function callback(errors, results) {
+      if (errors) {
+        console.error(error);
+      } else {
+        res.json(
+          successResponse(
+            { ...results[0] },
+            "Friend requests fetched successfully!"
+          )
+        );
+      }
+    }
+    FriendsModel.findPendingByUser({ req_id, cb: callback });
+  }
+
   create(req, res, next) {
     const { user_id } = req;
     const { friend_id } = req.body;
 
     function callback(errors, results) {
       if (errors) {
-        console.error(error);
+        console.error(errors);
       } else {
         res.json(successResponse(null, "Friend requests sent successfully!"));
       }
@@ -70,11 +87,11 @@ class FriendController {
 
   getFriends(req, res, next) {
     const { user_id } = req;
-    const {req_user} = req.params;
+    const { req_user } = req.params;
 
     let user = user_id;
 
-    if(req_user)user = req_user;
+    if (req_user) user = req_user;
 
     function callback(errors, results) {
       if (errors) {

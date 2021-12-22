@@ -2,7 +2,6 @@ const { setup } = require("./loaders");
 const express = require("express");
 const { createServer } = require("http");
 const { Server } = require("socket.io");
-const { UserModel } = require("./models/UserModel");
 
 const app = express();
 

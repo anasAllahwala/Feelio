@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Auth, FriendsApi, PostsApi } from "../../api";
-import { Post } from "../../components";
+import { Button, Post } from "../../components";
 import { useAuth } from "../../hooks";
 
 const Profile = ({ title }) => {
@@ -12,6 +12,7 @@ const Profile = ({ title }) => {
   let params = useParams();
   const { user } = useAuth();
   const [posts, setPosts] = useState([]);
+  const [isFriend, setIsFriend] = useState(false);
   const [currUser, setCurrUser] = useState(null);
   const [friends, setFriends] = useState([]);
 
@@ -52,11 +53,44 @@ const Profile = ({ title }) => {
     }
   }, [user, params]);
 
+  useEffect(() => {
+    if (user && currUser) {
+      if (currUser.user_id !== user.user_id) {
+        let check = friends.some((friend) => {
+          return friend.user_id === user.user_id;
+        });
+
+        setIsFriend(check);
+      }
+    }
+  }, [friends]);
+
+  function sendFriendRequest(user_id) {
+    FriendsApi.sendFriendRequest({ friend_id: user_id })
+      .then(({ data }) => {
+        console.log(data);
+        if (data.headers.error.toString() === "0") {
+          alert(data.headers.message);
+        }
+      })
+      .catch((e) => console.error(e));
+  }
+
   return (
     <div>
       {currUser && (
         <div>
-          <h1 className="text-2xl text-center my-5">{currUser.name}</h1>
+          <div className="flex justify-center items-center  my-5">
+            <h1 className="text-2xl text-center">{currUser.name}</h1>
+            {!isFriend && (
+              <button
+                onClick={() => sendFriendRequest(currUser.user_id)}
+                className="bg-blue-600 text-white px-3 py-2 rounded-md  ml-5"
+              >
+                Add Friend
+              </button>
+            )}
+          </div>
           <div className="flex justify-center my-2">
             <h2 className="text-xl mx-2">
               {friends.length} Friend{friends.length !== 1 ? "s" : ""}

@@ -131,9 +131,9 @@ const AuthProvider = ({ children }) => {
     [state, user]
   );
 
-  // useEffect(() => {
-  //   console.log(state, authContext);
-  // }, [state]);
+  useEffect(() => {
+    // console.log(state, authContext);
+  }, [state]);
 
   return (
     <AuthContext.Provider value={authContext}>{children}</AuthContext.Provider>
