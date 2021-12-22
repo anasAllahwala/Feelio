@@ -88,6 +88,92 @@ class PostController {
     PostModel.create({ body, image, user_id, cb: callback });
   }
 
+  addComment(req, res, next) {
+    const { user_id } = req;
+    const { post_id, comment } = req.body;
+
+    function callback(error, results) {
+      if (error) {
+        res.json({
+          header: {
+            error: "1",
+            message: "Failed to create Comment!",
+          },
+        });
+      } else {
+        res.json(
+          successResponse({ ...results }, "Comment created successfully!")
+        );
+      }
+    }
+
+    PostModel.addComment({ user_id, post_id, comment, cb: callback });
+  }
+
+  addReact(req, res, next) {
+    const { user_id } = req;
+    const { post_id } = req.body;
+
+    function callback(error, results) {
+      if (error) {
+        res.json({
+          header: {
+            error: "1",
+            message: "Failed to add Like!",
+          },
+        });
+      } else {
+        res.json(
+          successResponse({ ...results }, "Like added successfully!")
+        );
+      }
+    }
+
+    PostModel.addComment({ user_id, post_id, cb: callback });
+  }
+
+  getPostComments(req, res, next) {
+    const { post_id } = req.body;
+
+    function callback(error, results) {
+      if (error) {
+        res.json({
+          header: {
+            error: "1",
+            message: "Request Failed!",
+          },
+        });
+      } else {
+        res.json(
+          successResponse({ ...results }, "Comments fetched successfully!")
+        );
+      }
+    }
+
+    PostModel.getPostComments({ post_id, cb: callback });
+  }
+
+  getPostReacts(req, res, next) {
+    const { post_id } = req.body;
+
+    function callback(error, results) {
+      if (error) {
+        res.json({
+          header: {
+            error: "1",
+            message: "Request Failed!",
+          },
+        });
+      } else {
+        res.json(
+          successResponse({ ...results }, "Likes fetched successfully!")
+        );
+      }
+    }
+
+    PostModel.getPostReacts({ post_id, cb: callback });
+  }
+
   edit(req, res, next) {
     const { user_id } = req;
     const { body, image, post_id } = req.body;
