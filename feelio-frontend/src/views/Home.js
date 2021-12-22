@@ -29,12 +29,17 @@ const Home = ({ title }) => {
             className="flex-1"
             onChange={(e) => setSearch(e.target.value)}
           />
-          <Button onClick={() => filterUsers()}>Search</Button>
+          <Button
+            className="bg-green-600 text-white"
+            onClick={() => filterUsers()}
+          >
+            Search Users
+          </Button>
         </div>
         <div>
           {users.map((user, key) => (
             <Link key={key} to={"profile/" + user.user_id}>
-              {user.name}
+              <div className="p-5 border w-full">{user.name}</div>
             </Link>
           ))}
         </div>
