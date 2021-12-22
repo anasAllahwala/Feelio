@@ -12,7 +12,7 @@ const Input = ({
   return (
     <div className={"flex items-center " + parentClass}>
       {label ? (
-        <label htmlFor={id} className="mr-2 w-36">
+        <label htmlFor={id} className="mr-2 w-40">
           {label}
         </label>
       ) : null}

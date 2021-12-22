@@ -81,7 +81,7 @@ const Navbar = ({ title, active }) => {
         <div className=" max-w-md lg:max-w-6xl m-auto py-5">
           <div className="flex justify-between items-center">
             <h1 className="font-semibold text-2xl">Feelio</h1>
-            {searchBar()}
+            {auth.user && searchBar()}
             {!(auth.user && !auth.isLoading) ? (
               <nav>
                 <Link className="mr-2" to="/login">

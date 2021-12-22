@@ -32,7 +32,7 @@ const Register = ({ title }) => {
 
   return (
     <div>
-      <div className="max-w-md md:max-w-xl w-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+      <div className="max-w-md md:max-w-3xl w-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
         <div className="shadow-lg rounded-md">
           <dl className="p-5 border-b">
             <dt className="font-semibold text-xl">Registration Form</dt>
@@ -65,6 +65,11 @@ const Register = ({ title }) => {
               className="mt-2 flex-1"
               onChange={(e) => setPassword(e.target.value)}
               required
+            />
+            <Input
+              label="Profile Picture"
+              type="file"
+              className="mt-2 flex-1"
             />
             <Button className="block ml-auto bg-green-500 text-white mt-2">
               Register
