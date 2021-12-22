@@ -43,7 +43,9 @@ class AdminModel {
 
   get_all_posts({ page_num, cb }) {
     let page = 0;
-    if (page_num) page = (page_num - 1) * 5;
+    if (page_num) page = page_num;
+    page = (page - 1) * 5;
+
     DBService.dbPool.query(
       "SELECT post_id, body, image, posts.user_id, users.name, posted_at FROM posts LEFT JOIN users ON users.user_id = posts.user_id ORDER BY post_id DESC LIMIT ?, 5",
       [page],
@@ -65,24 +67,31 @@ class AdminModel {
   }
 
   get_all_users({ page_num, cb }) {
-    let page = 0;
-    if (page_num) page = (page_num - 1) * 5;
+    let results_num = 2;
+    let page = 1;
+    if (page_num) page = page_num;
+    page = (page - 1) * results_num;
+
     DBService.dbPool.query(
-      "SELECT user_id, name, email, signup_date, role_name FROM users LEFT JOIN roles on users.role_id = roles.role_id LIMIT ?, 5",
-      [page],
+      "SELECT user_id, name, email, signup_date, role_name FROM users LEFT JOIN roles on users.role_id = roles.role_id LIMIT ?, ?",
+      [page, results_num],
       (error, results) => {
-        cb(error, results);
+        let data = {
+          data: { ...results },
+          currPage: page / results_num + 1,
+        };
+        this.get_all_users_pages({ cb, data }, results_num);
       }
     );
   }
 
-  get_all_users_pages({ cb }) {
+  get_all_users_pages({ cb, data }, perPage) {
     DBService.dbPool.query(
       "SELECT count(*) AS pages FROM users",
       [],
       (error, results) => {
-        results[0]["pages"] = Math.ceil(results[0]["pages"] / 5);
-        cb(error, results);
+        data["pages"] = Math.ceil(results[0]["pages"] / perPage);
+        cb(error, data);
       }
     );
   }

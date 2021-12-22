@@ -129,7 +129,7 @@ class AdminController {
   }
 
   getAllUsers(req, res, next) {
-    const { page_num } = req.body;
+    const { page_num } = req.query;
 
     function callback(error, results) {
       if (error) {

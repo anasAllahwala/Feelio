@@ -2,7 +2,9 @@ import { axiosInstance } from "../axios";
 import { API } from "../constants";
 
 const fetchUsers = (params) => {
-  return axiosInstance.get(API.ADMIN_USERS, params);
+  return axiosInstance.get(API.ADMIN_USERS, {
+    params: { page_num: params },
+  });
 };
 
 const fetchPosts = (params) => {
