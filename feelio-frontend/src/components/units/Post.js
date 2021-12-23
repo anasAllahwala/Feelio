@@ -4,10 +4,10 @@ import { PostsApi } from "../../api";
 import { useIsOwner } from "../../hooks";
 import moment from "moment";
 import { Link } from "react-router-dom";
-import { API } from "../../constants";
+import { Avatar } from "..";
 
 const Post = ({ post, refresh }) => {
-  const { user_id, name, posted_at, post_id, image_url, body } = post;
+  const { user_id, name, posted_at, post_id, image_url, body, reacts, comments } = post;
   const isOwner = useIsOwner(user_id);
 
   const [editing, setEditing] = useState(false);
@@ -46,11 +46,7 @@ const Post = ({ post, refresh }) => {
     <div className="shadow-md rounded-lg my-5 border">
       <div className="flex items-center justify-between  p-5">
         <div className="flex items-center">
-          <img
-            src={API.BASE_URL + image_url}
-            alt=""
-            className="h-12 w-12 rounded-full shadow-md object-cover mr-2"
-          />
+          <Avatar className="mr-2" name={name} image_url={image_url} />
           <div>
             <Link to={"/profile/" + user_id}>
               <h5 className="text-blue-600 font-semibold">{name}</h5>
@@ -110,6 +106,10 @@ const Post = ({ post, refresh }) => {
           <image src={image} alt="image" width="300" height="200" />
         ) : null} */}
       </div>
+      {/* <div className="flex">
+        <p>{reacts} Likes</p>
+        <p>{comments} Comments</p>
+      </div> */}
     </div>
   );
 };

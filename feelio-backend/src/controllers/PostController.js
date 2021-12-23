@@ -123,9 +123,7 @@ class PostController {
           },
         });
       } else {
-        res.json(
-          successResponse({ ...results }, "Like added successfully!")
-        );
+        res.json(successResponse({ ...results }, "Like added successfully!"));
       }
     }
 

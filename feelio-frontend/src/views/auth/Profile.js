@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Auth, FriendsApi, PostsApi } from "../../api";
-import { Post } from "../../components";
-import { API } from "../../constants";
+import { Avatar, Post } from "../../components";
 import { useAuth } from "../../hooks";
 
 const Profile = ({ title, active }) => {
@@ -82,11 +81,7 @@ const Profile = ({ title, active }) => {
       {currUser && (
         <div>
           <div className="flex justify-center">
-            <img
-              src={API.BASE_URL + currUser.image_url}
-              alt=""
-              className="rounded-full h-32 w-32 shadow-md object-cover"
-            />
+            <Avatar name={currUser.name} image_url={currUser.image_url} size="large" />
           </div>
           <div className="flex justify-center items-center  my-5">
             <h1 className="text-2xl text-center">{currUser.name}</h1>

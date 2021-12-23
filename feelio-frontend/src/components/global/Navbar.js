@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { Avatar } from ".";
 import UsersApi from "../../api/Users";
-import { API } from "../../constants";
 import { useAuth } from "../../hooks";
 
 const Navbar = ({ title, active }) => {
@@ -57,10 +57,10 @@ const Navbar = ({ title, active }) => {
               users.map((user, key) => (
                 <Link key={key} to={"profile/" + user.user_id}>
                   <div className="flex items-center p-3 border w-full hover:bg-gray-100 cursor-pointer">
-                    <img
-                      src={API.BASE_URL + user.image_url}
-                      alt=""
-                      className="h-10 w-10 object-cover rounded-full mr-3"
+                    <Avatar
+                      className="mr-2"
+                      name={user.name}
+                      image_url={user.image_url}
                     />
                     <p className="font-semibold">{user.name}</p>
                   </div>
@@ -110,17 +110,9 @@ const Navbar = ({ title, active }) => {
                     className="flex items-center"
                   >
                     <span className="mr-2">{auth.user.name}</span>
-                    <img
-                      src={
-                        auth.user.image_url
-                          ? API.BASE_URL + auth.user.image_url
-                          : "https://ui-avatars.com/api/?rounded=true&size=35&name=" +
-                            auth.user.name.replace(" ", "+")
-                      }
-                      alt=""
-                      width={50}
-                      height={50}
-                      className="h-10 w-10 mr-2 rounded-full shadow-md object-cover"
+                    <Avatar
+                      name={auth.user.name}
+                      image_url={auth.user.image_url}
                     />
                   </button>
                   <div
@@ -131,17 +123,10 @@ const Navbar = ({ title, active }) => {
                   >
                     <Link to="/profile">
                       <div className="flex items-center w-full p-3 border-b hover:bg-gray-50">
-                        <img
-                          src={
-                            auth.user.image_url
-                              ? API.BASE_URL + auth.user.image_url
-                              : "https://ui-avatars.com/api/?rounded=true&size=35&name=" +
-                                auth.user.name.replace(" ", "+")
-                          }
-                          alt=""
-                          width="50px"
-                          height="50px"
-                          className="h-10 w-10 mr-3 rounded-full border object-cover shadow-md"
+                        <Avatar
+                          className="mr-2"
+                          name={auth.user.name}
+                          image_url={auth.user.image_url}
                         />
                         <dl className="flex-1">
                           <dt className="font-semibold">{auth.user.name}</dt>
