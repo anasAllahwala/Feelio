@@ -1,3 +1,4 @@
 import API from "./endpoints";
+import * as ICONS from "./icons";
 
-export { API };
+export { API, ICONS };

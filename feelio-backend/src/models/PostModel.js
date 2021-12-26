@@ -3,7 +3,7 @@ const { DBService } = require("../services/DBService");
 class PostModel {
   findById({ user_id, post_id, cb }) {
     DBService.dbPool.query(
-      "SELECT posts.post_id, body, image_url, posts.user_id, users.name, posted_at, COUNT(reacts.react_id) as reacts, COUNT(comments.comment_id) as comments FROM posts LEFT JOIN users ON users.user_id = posts.user_id LEFT JOIN reacts on posts.post_id = reacts.post_id LEFT JOIN comments on posts.post_id = comments.post_id WHERE posts.post_id = ? AND (posts.user_id = ? OR posts.user_id IN (SELECT IF(sender_id = ?, receiver_id, sender_id) as user_id FROM friend_requests WHERE status = 'Accepted' AND (sender_id = ? OR receiver_id = ?)))",
+      "SELECT posts.post_id, body, image_url, posts.user_id, users.name, posted_at, COUNT(DISTINCT(reacts.react_id)) as reacts, COUNT(DISTINCT(comments.comment_id)) as comments FROM posts LEFT JOIN users ON users.user_id = posts.user_id LEFT JOIN reacts on posts.post_id = reacts.post_id LEFT JOIN comments on posts.post_id = comments.post_id WHERE posts.post_id = ? AND (posts.user_id = ? OR posts.user_id IN (SELECT IF(sender_id = ?, receiver_id, sender_id) as user_id FROM friend_requests WHERE status = 'Accepted' AND (sender_id = ? OR receiver_id = ?)))",
       [post_id, user_id, user_id, user_id, user_id],
       (error, results) => {
         cb(error, results);
@@ -21,7 +21,7 @@ class PostModel {
       params.push(last_post_id);
     }
     let sql =
-      "SELECT posts.post_id, body, image_url, posts.user_id, users.name, posted_at, COUNT(reacts.react_id) as reacts, COUNT(comments.comment_id) as comments FROM posts LEFT JOIN users ON users.user_id = posts.user_id LEFT JOIN reacts on posts.post_id = reacts.post_id LEFT JOIN comments on posts.post_id = comments.post_id WHERE (posts.user_id = ? OR posts.user_id IN (SELECT IF(sender_id = ?, receiver_id, sender_id) as user_id FROM friend_requests WHERE status = 'Accepted' AND (sender_id = ? OR receiver_id = ?))) GROUP BY posts.post_id, body, image_url, posts.user_id, users.name,posted_at" +
+      "SELECT posts.post_id, body, image_url, posts.user_id, users.name, posted_at, COUNT(DISTINCT(reacts.react_id)) as reacts, COUNT(DISTINCT(comments.comment_id)) as comments FROM posts LEFT JOIN users ON users.user_id = posts.user_id LEFT JOIN reacts on posts.post_id = reacts.post_id LEFT JOIN comments on posts.post_id = comments.post_id WHERE (posts.user_id = ? OR posts.user_id IN (SELECT IF(sender_id = ?, receiver_id, sender_id) as user_id FROM friend_requests WHERE status = 'Accepted' AND (sender_id = ? OR receiver_id = ?))) GROUP BY posts.post_id, body, image_url, posts.user_id, users.name,posted_at" +
       post_condition +
       " ORDER BY post_id DESC LIMIT 25";
 
@@ -40,7 +40,7 @@ class PostModel {
       params.push(last_post_id);
     }
     let sql =
-      "SELECT post_id, body, image_url, posts.user_id, users.name, posted_at FROM posts LEFT JOIN users ON users.user_id = posts.user_id WHERE posts.user_id = ? " +
+      "SELECT post_id, body, image_url, posts.user_id, users.name, posted_at, COUNT(DISTINCT(reacts.react_id)) as reacts, COUNT(DISTINCT(comments.comment_id)) as comments FROM posts LEFT JOIN users ON users.user_id = posts.user_id LEFT JOIN reacts on reacts.post_id = posts.post_id LEFT JOIN comments ON comments.post_id = reacts.post_id WHERE posts.user_id = ? " +
       post_condition +
       " ORDER BY post_id DESC LIMIT 25";
 

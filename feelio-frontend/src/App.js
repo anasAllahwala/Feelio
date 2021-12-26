@@ -10,7 +10,7 @@ import {
   AdminPosts,
   Chat as ChatView,
 } from "./views";
-import { Navbar, RequireAuth, RequireAdmin, Chat } from "./components";
+import { Navbar, RequireAuth, RequireAdmin, Chat, Avatar } from "./components";
 import { useAuth } from "./hooks";
 
 function App() {
@@ -63,19 +63,29 @@ function App() {
         <div className="flex justify-evenly items-end">
           {chats.map((chat, key) => chatContainer(chat, key))}
           <div className="relative w-80">
-            {chatVisible ? (
+            {chatVisible && (
               <div className="border w-full">
-                {friends.map((friend, key) => (
-                  <button
-                    onClick={() => addChat(friend)}
-                    key={key}
-                    className="py-2 px-5 border-b block w-full text-left"
-                  >
-                    {friend.friend_name}
-                  </button>
-                ))}
+                {friends.length > 0 ? (
+                  friends.map((friend, key) => (
+                    <button
+                      onClick={() => addChat(friend)}
+                      key={key}
+                      className="py-2 px-5 border-b w-full text-left flex items-center"
+                    >
+                      <Avatar
+                        name={friend.friend_name}
+                        image_url={friend.sender_image}
+                        className={"mr-2"}
+                        size={"small"}
+                      />
+                      <p>{friend.friend_name}</p>
+                    </button>
+                  ))
+                ) : (
+                  <p>No friends to show!</p>
+                )}
               </div>
-            ) : null}
+            )}
             <button
               onClick={() => setChatVisibility(!chatVisible)}
               className="border px-5 w-full  h-10 flex items-center"
@@ -89,7 +99,7 @@ function App() {
   }
 
   return (
-    <div>
+    <div className="text-xs sm:text-sm md:text-base lg:text-lg">
       <Navbar title={title} active={active} />
       <div className="max-w-md lg:max-w-6xl m-auto py-5">
         <Routes>

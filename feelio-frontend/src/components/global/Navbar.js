@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { Avatar } from ".";
+import { Avatar, SearchBar } from ".";
 import UsersApi from "../../api/Users";
 import { useAuth } from "../../hooks";
 
@@ -36,42 +36,30 @@ const Navbar = ({ title, active }) => {
 
   function searchBar() {
     return (
-      <div ref={ref} className="relative w-1/2">
-        <div className=" w-full flex rounded-md overflow-hidden">
-          <input
-            type="search"
-            value={search}
-            className="flex-1 border-0 text-black"
-            onChange={(e) => setSearch(e.target.value)}
-          />
-          <button
-            className="bg-gray-100 text-black px-2 border-0"
-            onClick={() => filterUsers()}
-          >
-            Search
-          </button>
-        </div>
-        {usersVisible && (
-          <div className="absolute left-0 bg-white w-full text-black mt-1 overflow-hidden rounded-md shadow-md">
-            {users.length > 0 ? (
-              users.map((user, key) => (
-                <Link key={key} to={"profile/" + user.user_id}>
-                  <div className="flex items-center p-3 border w-full hover:bg-gray-100 cursor-pointer">
-                    <Avatar
-                      className="mr-2"
-                      name={user.name}
-                      image_url={user.image_url}
-                    />
-                    <p className="font-semibold">{user.name}</p>
-                  </div>
-                </Link>
-              ))
-            ) : (
-              <div className="p-3 border w-full">No results found!</div>
-            )}
-          </div>
+      <SearchBar
+        search={search}
+        setSearch={setSearch}
+        visible={usersVisible}
+        filter={filterUsers}
+        ref={ref}
+      >
+        {users.length > 0 ? (
+          users.map((user, key) => (
+            <Link key={key} to={"profile/" + user.user_id}>
+              <div className="flex items-center p-3 border w-full hover:bg-gray-100 cursor-pointer">
+                <Avatar
+                  className="mr-2"
+                  name={user.name}
+                  image_url={user.image_url}
+                />
+                <p className="font-semibold">{user.name}</p>
+              </div>
+            </Link>
+          ))
+        ) : (
+          <div className="p-3 border w-full">No results found!</div>
         )}
-      </div>
+      </SearchBar>
     );
   }
 
@@ -168,13 +156,13 @@ const Navbar = ({ title, active }) => {
         </div>
       </div>
       <div className="max-w-md lg:max-w-6xl m-auto">
-        <div className=" text-gray-600 mt-5">
+        <div className=" text-gray-600">
           {!auth.isLoading && auth.user ? (
-            <div className="flex justify-evenly w-1/2 mx-auto">
+            <div className="flex justify-center mx-auto">
               <Link to="/">
                 <div
                   className={
-                    "flex items-center mx-2 font-semibold" +
+                    "flex items-center font-semibold p-5" +
                     (active === "home" ? " text-blue-500" : "")
                   }
                 >
@@ -194,7 +182,7 @@ const Navbar = ({ title, active }) => {
               <Link to="/friends">
                 <div
                   className={
-                    "flex items-center mx-2 font-semibold" +
+                    "flex items-center font-semibold p-5" +
                     (active === "friend-requests" ? " text-blue-500" : "")
                   }
                 >
@@ -220,7 +208,7 @@ const Navbar = ({ title, active }) => {
                 <Link to="/admin-panel">
                   <div
                     className={
-                      "flex items-center mx-2 font-semibold" +
+                      "flex items-center font-semibold p-5" +
                       (active === "admin-panel" ? " text-green-500" : "")
                     }
                   >

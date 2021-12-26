@@ -3,7 +3,7 @@ const { DBService } = require("../services/DBService");
 class FriendsModel {
   findPendingByUser({ user_id, cb }) {
     DBService.dbPool.query(
-      "SELECT friend_request_id, sender_id, users.name as sender_name, friend_request_date FROM friend_requests INNER JOIN users ON friend_requests.sender_id = users.user_id WHERE status = 'Pending' AND receiver_id = ? ORDER BY friend_request_date DESC",
+      "SELECT friend_request_id, users.image_url as sender_image, sender_id, users.name as sender_name, friend_request_date FROM friend_requests INNER JOIN users ON friend_requests.sender_id = users.user_id WHERE status = 'Pending' AND receiver_id = ? ORDER BY friend_request_date DESC",
       [user_id],
       (error, results) => {
         cb(error, results);
@@ -13,7 +13,7 @@ class FriendsModel {
 
   findPendingById({ req_id, cb }) {
     DBService.dbPool.query(
-      "SELECT friend_request_id, sender_id, users.name as sender_name, friend_request_date FROM friend_requests INNER JOIN users ON friend_requests.sender_id = users.user_id WHERE status = 'Pending' AND friend_request_id = ? ORDER BY friend_request_date DESC",
+      "SELECT friend_request_id, users.image_url as sender_image, sender_id, users.name as sender_name, friend_request_date FROM friend_requests INNER JOIN users ON friend_requests.sender_id = users.user_id WHERE status = 'Pending' AND friend_request_id = ? ORDER BY friend_request_date DESC",
       [req_id],
       (error, results) => {
         cb(error, results);
@@ -23,7 +23,7 @@ class FriendsModel {
 
   findAcceptedByUser({ user_id, cb }) {
     DBService.dbPool.query(
-      "SELECT friend_request_id, IF(sender_id = ?, receiver_id, sender_id) as friend_id, users.name as friend_name, friend_request_date FROM friend_requests INNER JOIN users ON IF(sender_id = ?, receiver_id, sender_id) = users.user_id WHERE status = 'Accepted' AND (sender_id = ? OR receiver_id = ?) ORDER BY friend_request_date DESC",
+      "SELECT friend_request_id, IF(sender_id = ?, receiver_id, sender_id) as friend_id, users.image_url as sender_image, users.name as friend_name, friend_request_date FROM friend_requests INNER JOIN users ON IF(sender_id = ?, receiver_id, sender_id) = users.user_id WHERE status = 'Accepted' AND (sender_id = ? OR receiver_id = ?) ORDER BY friend_request_date DESC",
       [user_id, user_id, user_id, user_id],
       (error, results) => {
         cb(error, results);

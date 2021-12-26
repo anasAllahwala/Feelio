@@ -19,16 +19,16 @@ const Avatar = ({ name, image_url, size, className }) => {
   useEffect(() => {
     switch (size) {
       case "small":
-        setSizeClass(" h-10 w-10");
+        setSizeClass("h-6 w-6");
         return;
       case "medium":
-        setSizeClass(" h-20 w-20");
+        setSizeClass("h-20 w-20");
         return;
       case "large":
-        setSizeClass(" h-24 w-24");
+        setSizeClass("h-24 w-24");
         return;
       default:
-        setSizeClass(" h-10 w-10");
+        setSizeClass("h-10 w-10");
         return;
     }
   }, [size]);
@@ -41,7 +41,7 @@ const Avatar = ({ name, image_url, size, className }) => {
         width={500}
         height={500}
         className={
-          "rounded-full shadow-md object-cover " + className + sizeClass
+          className + " rounded-full shadow-md object-cover " + sizeClass
         }
       />
     );
